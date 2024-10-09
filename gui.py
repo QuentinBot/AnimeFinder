@@ -90,15 +90,21 @@ def find_sequel_seasonal_gui():
     season_option_menu.grid(row=1, column=1, padx=5, pady=5)
     
     # Create a button    
-    button = ttk.Button(window, text="Find Sequel Seasonal", command=find_sequel_seasonal)
+    button = ttk.Button(window, text="Find Sequel Seasonal", command=lambda: [find_sequel_seasonal(), show_save_button()])
     button.pack()
 
-    # Create a save button
-    save_button = ttk.Button(window, text="Save", command=save_state)
-    save_button.pack(side=tk.BOTTOM)
+    # Create a save button but don't pack it yet
+    save_button = ttk.Button(window, text="Save", command=save_state, width=20)
+    def show_save_button():
+        save_button.pack(side=tk.BOTTOM)
+        save_button.config(style="Green.TButton")
+
+    # Create a style for the green button
+    style = ttk.Style()
+    style.configure("Green.TButton", background="green", foreground="black")
 
     # Create a text widget to display the results
-    result_text = tk.Text(window, height=40, width=200)
+    result_text = tk.Text(window, height=25, width=150)
     result_text.pack()
 
     # Start the main loop
