@@ -14,7 +14,7 @@ def find_sequel_seasonal_gui():
         "UNKNOWN": "black",
         "TV_SPECIAL": "red"
     }
-    background_colors = ["white", "#ffcccc", "#ccffcc"]
+    background_colors = ["white", "#ccffcc", "#ffcccc"] # "#ccffcc" = green, "#ffcccc" = red
 
     def find_sequel_seasonal():
         year = year_entry.get()
@@ -22,10 +22,25 @@ def find_sequel_seasonal_gui():
         result = main.find_sequel_seasonal(year, season)
         result.sort(key=lambda x: x.split(":")[0])  # Sort the result by mediatype
         result_text.delete(1.0, tk.END)  # Clear the text widget
+
+        filename = f"./Savestates/sequel_seasonal_{year}_{season}.txt"
+        background_dictionary = {}
+        try:
+            with open(filename, "r") as file:
+                saved_lines = file.readlines()
+                for line in saved_lines:
+                    color, tag = line.split()
+                    background_dictionary[tag] = color
+        except FileNotFoundError:
+            pass
+
         for i in result:
             media_type = i.split(":")[0]
             mal_id = i.split(" - ")[-1].split("/")[-1]
-            result_text.tag_configure(mal_id, background="white", foreground=mediatype_colors[media_type])  # Create a tag for this media type
+            if mal_id not in background_dictionary:
+                background_dictionary[mal_id] = "white"
+
+            result_text.tag_configure(mal_id, background=background_dictionary[mal_id], foreground=mediatype_colors[media_type])  # Create a tag for this media type
             result_text.insert(tk.END, f"{i}\n", mal_id)  # Apply the tag to the inserted text
             result_text.tag_bind(mal_id, "<Button-1>", lambda e, tag=mal_id: change_color(tag, 1))  # Bind left click event to change color
             result_text.tag_bind(mal_id, "<Button-3>", lambda e, tag=mal_id: change_color(tag, -1))  # Bind right click event to change color
@@ -36,7 +51,17 @@ def find_sequel_seasonal_gui():
         new_color = background_colors[(background_colors.index(current_color) + direction) % len(background_colors)]
         result_text.tag_configure(tag, background=new_color)
         
-
+    def save_state():
+        year = year_entry.get()
+        season = season_var.get()
+        filename = f"sequel_seasonal_{year}_{season}.txt"
+        with open("./Savestates/" + filename, "w") as file:
+            for line in result_text.get(1.0, tk.END).splitlines():
+                tag = line.split("/")[-1]
+                if tag:
+                    current_color = result_text.tag_cget(tag, "background")      
+                    file.write(f"{current_color} {tag}\n")
+        messagebox.showinfo("Save State", f"Results saved to {filename}")
 
     # Create the main window
     window = tk.Tk()
@@ -67,7 +92,11 @@ def find_sequel_seasonal_gui():
     # Create a button    
     button = ttk.Button(window, text="Find Sequel Seasonal", command=find_sequel_seasonal)
     button.pack()
-    
+
+    # Create a save button
+    save_button = ttk.Button(window, text="Save", command=save_state)
+    save_button.pack(side=tk.BOTTOM)
+
     # Create a text widget to display the results
     result_text = tk.Text(window, height=40, width=200)
     result_text.pack()
