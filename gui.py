@@ -14,6 +14,7 @@ def find_sequel_seasonal_gui():
         "UNKNOWN": "black",
         "TV_SPECIAL": "red"
     }
+    background_colors = ["white", "#ffcccc", "#ccffcc"]
 
     def find_sequel_seasonal():
         year = year_entry.get()
@@ -23,9 +24,20 @@ def find_sequel_seasonal_gui():
         result_text.delete(1.0, tk.END)  # Clear the text widget
         for i in result:
             media_type = i.split(":")[0]
-            result_text.tag_configure(media_type, foreground=mediatype_colors[media_type])  # Create a tag for this media type
-            result_text.insert(tk.END, f"{i}\n", media_type)  # Apply the tag to the inserted text
-            
+            mal_id = i.split(" - ")[-1].split("/")[-1]
+            result_text.tag_configure(mal_id, background="white", foreground=mediatype_colors[media_type])  # Create a tag for this media type
+            result_text.insert(tk.END, f"{i}\n", mal_id)  # Apply the tag to the inserted text
+            result_text.tag_bind(mal_id, "<Button-1>", lambda e, tag=mal_id: change_color(tag, 1))  # Bind left click event to change color
+            result_text.tag_bind(mal_id, "<Button-3>", lambda e, tag=mal_id: change_color(tag, -1))  # Bind right click event to change color
+
+    def change_color(tag, direction):
+        # Change the color of the line when clicked
+        current_color = result_text.tag_cget(tag, "background")
+        new_color = background_colors[(background_colors.index(current_color) + direction) % len(background_colors)]
+        result_text.tag_configure(tag, background=new_color)
+        
+
+
     # Create the main window
     window = tk.Tk()
     window.title("Find Sequel Seasonal")
@@ -43,7 +55,7 @@ def find_sequel_seasonal_gui():
     year_label.grid(row=0, column=0, padx=5, pady=5)
     year_entry = ttk.Entry(input_frame)
     year_entry.grid(row=0, column=1, padx=5, pady=5)
-    year_entry.insert(0, "2025")  # Autofill with year 2024
+    year_entry.insert(0, "2025")  # Autofill with year 2025
 
     # Create a label and option menu for season name
     season_label = ttk.Label(input_frame, text="Season Name:")
