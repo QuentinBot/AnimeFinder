@@ -7,7 +7,7 @@ def find_sequel_seasonal_gui():
     mediatype_colors = {
         "MOVIE": "purple",
         "TV": "blue",
-        "OVA": "yellow",
+        "OVA": "olive",
         "ONA": "green",
         "SPECIAL": "brown",
         "MUSIC": "gray",
