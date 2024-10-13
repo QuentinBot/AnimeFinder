@@ -42,6 +42,20 @@ def find_sequel_seasonal(year=2024, season="summer"):
     return filtered_data
 
 
+def find_upcoming(params={"ranking_type": "upcoming", "limit": 10, "fields": "id,title,num_list_users,media_type,related_anime"}):
+    print("Finding upcoming sequels...")
+    response = requests.get(f'https://api.myanimelist.net/v2/anime/ranking', headers=auth, params=params)
+    upcoming_sequels = []
+    for anime in response.json()["data"]:
+        if anime["node"]["num_list_users"] < min_users_threshold:
+            break
+        details = get_details(anime["node"]["id"])
+        if len(details["related_anime"]) > 0:
+            upcoming_sequels.append(anime)
+
+    return upcoming_sequels
+
+
 def main():
     id1 = "55749"
     id2 = "52807"
@@ -60,8 +74,9 @@ def main():
 
 
 if __name__ == '__main__': 
-    find_sequel_seasonal(year=2025, season="spring")
-    find_sequel_seasonal(year=2025, season="summer")
+    find_upcoming()
+    # find_sequel_seasonal(year=2025, season="spring")
+    # find_sequel_seasonal(year=2025, season="summer")
     # main()
     # find_sequel_seasonal()
 
