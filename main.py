@@ -57,6 +57,8 @@ def find_upcoming(params={"ranking_type": "upcoming", "limit": 20, "fields": "id
 
 
 def main():
+    print(get_details("-1"))
+    return
     id1 = "55749"
     id2 = "52807"
     params = {"ranking_type": "upcoming", "limit": 200, "fields": "id,title,num_list_users,media_type"}
@@ -74,9 +76,9 @@ def main():
 
 
 if __name__ == '__main__': 
-    find_upcoming()
+    # find_upcoming()
     # find_sequel_seasonal(year=2025, season="spring")
     # find_sequel_seasonal(year=2025, season="summer")
-    # main()
+    main()
     # find_sequel_seasonal()
 

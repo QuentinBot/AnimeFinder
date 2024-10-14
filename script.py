@@ -2,21 +2,30 @@ import datetime
 import os
 from main import find_sequel_seasonal, find_upcoming, get_details
 
+
 seasons = ["winter", "spring", "summer", "fall"]
+
 
 def run():
     while True:
-        choice = input("Search for new anime? (y/n): ").strip().lower()
-        if choice == "y":
+        print("What would you like to do?")
+        print("1: Search for new anime")
+        print("2: Mark anime as caught up")
+        print("3: Exit")
+        choice = input().strip().lower()
+        if choice == "1":
             search_new_anime()
+            create_catch_up_list()
+            print("Search complete.\n")
+        elif choice == "2":
+            id = input("Enter the MyAnimeList ID of the anime you have finished watching: ")
+            finished_watching(id)
+            print("Anime marked as caught up.\n")
+        elif choice == "3":
             break
-        elif choice == "n":
-            return
         else:
-            print("Invalid choice. Please enter 'y' or 'n'.")
+            print("Invalid choice. Please enter a number between 1 and 3.")
     
-    create_catch_up_list()
-
 
 def search_new_anime():
     now = datetime.datetime.now()
@@ -124,6 +133,10 @@ def create_catch_up_list():
 
 def finished_watching(id):
     details = get_details(id, params={"fields": "start_season"})
+    if "error" in details:
+        print(f"Anime with ID {id} not found.\n")
+        return
+    
     if "start_season" in details:
         filename = f"./Savestates_Script/{details['start_season']['year']}_{seasons.index(details['start_season']['season'])}_{details['start_season']['season']}.txt"
     else:
@@ -137,5 +150,4 @@ def finished_watching(id):
 
 
 if __name__ == '__main__':
-    finished_watching("49363")
-    # run()
+    run()
