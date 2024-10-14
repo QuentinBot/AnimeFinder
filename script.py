@@ -2,6 +2,7 @@ import datetime
 import os
 from main import find_sequel_seasonal, find_upcoming, get_details
 
+seasons = ["winter", "spring", "summer", "fall"]
 
 def run():
     while True:
@@ -20,7 +21,6 @@ def run():
 def search_new_anime():
     now = datetime.datetime.now()
     year = now.year
-    seasons = ["winter", "spring", "summer", "fall"]
     next_season = seasons[((now.month - 1) // 3 + 1) % 4]
     if next_season == "winter":
         year += 1
@@ -122,5 +122,20 @@ def create_catch_up_list():
                     catch_up_list.write("\n\n")
 
 
+def finished_watching(id):
+    details = get_details(id, params={"fields": "start_season"})
+    if "start_season" in details:
+        filename = f"./Savestates_Script/{details['start_season']['year']}_{seasons.index(details['start_season']['season'])}_{details['start_season']['season']}.txt"
+    else:
+        filename = "./Savestates_Script/upcoming.txt"
+
+    print("Updating catch-up list...")
+    visited = load_visited_anime(filename)
+    visited[id] = "0"
+    save_visited_anime(filename, visited)
+    create_catch_up_list()        
+
+
 if __name__ == '__main__':
-    run()
+    finished_watching("49363")
+    # run()
