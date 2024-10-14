@@ -1,6 +1,6 @@
 import datetime
 import os
-from main import find_sequel_seasonal, find_upcoming
+from main import find_sequel_seasonal, find_upcoming, get_details
 
 
 def run():
@@ -25,7 +25,7 @@ def search_new_anime():
     if next_season == "winter":
         year += 1
 
-    complete_visited = set()
+    complete_visited = {}
     while True:
         print(f"Searching for {next_season} {year} anime...")
         result = find_sequel_seasonal(year, next_season)
@@ -40,9 +40,9 @@ def search_new_anime():
             mal_id = line.split("/")[-1]
             if mal_id not in visited:
                 if prompt_user_to_add(line):
-                    # need to add to catch-up list (maybe dictionary, maybe save to file with 1 and 0 marking watched and unwatched)
-                    pass
-                visited.add(mal_id)
+                    visited[mal_id] = "1"
+                else:
+                    visited[mal_id] = "0"
 
         save_visited_anime(filename, visited)
         complete_visited.update(visited)
@@ -58,18 +58,21 @@ def search_new_anime():
     for anime in upcoming:
         if str(anime["node"]["id"]) not in complete_visited:
             if prompt_user_to_add(f"{anime['node']['title']} - https://myanimelist.net/anime/{anime['node']['id']}"):
-                # need to add to catch-up list
-                pass
-            complete_visited.add(anime["node"]["id"])          
+                complete_visited[anime["node"]["id"]] = "1"
+            else:
+                complete_visited[anime["node"]["id"]] = "0"     
 
     save_visited_anime(filename, complete_visited)
 
 
 def load_visited_anime(filename):
-    visited = set()
+    visited = {}
     try:
         with open(filename, "r") as file:
-            visited.update(file.read().splitlines())
+            lines = file.read().splitlines()
+            for line in lines:
+                id, status = line.split()
+                visited[id] = status
     except FileNotFoundError:
         pass
     return visited
@@ -77,8 +80,8 @@ def load_visited_anime(filename):
 
 def save_visited_anime(filename, visited):
     with open(filename, "w") as file:
-        for line in visited:
-            file.write(f"{line}\n")
+        for id, value in visited.items():
+            file.write(f"{id} {value}\n")
 
 
 def prompt_user_to_add(anime_info):
@@ -111,8 +114,10 @@ def create_catch_up_list():
                     catch_up_list.write("############################################################\n")
                     catch_up_list.write(f"{name}\n")
                     catch_up_list.write("############################################################\n")
-                    catch_up_list.write("\n".join(lines))
-                    catch_up_list.write("\n\n\n")
+                    for line in lines:
+                        if line.split()[-1] == "1":
+                            catch_up_list.write(line + "\n")
+                    catch_up_list.write("\n\n")
 
 
 if __name__ == '__main__':
