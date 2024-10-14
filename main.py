@@ -42,7 +42,7 @@ def find_sequel_seasonal(year=2024, season="summer"):
     return filtered_data
 
 
-def find_upcoming(params={"ranking_type": "upcoming", "limit": 10, "fields": "id,title,num_list_users,media_type,related_anime"}):
+def find_upcoming(params={"ranking_type": "upcoming", "limit": 20, "fields": "id,title,num_list_users,media_type,related_anime"}):
     print("Finding upcoming sequels...")
     response = requests.get(f'https://api.myanimelist.net/v2/anime/ranking', headers=auth, params=params)
     upcoming_sequels = []

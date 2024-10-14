@@ -33,7 +33,7 @@ def search_new_anime():
             print("No results found.")
             break
 
-        filename = f"./Savestates_Script/{year}_{next_season}.txt"
+        filename = f"./Savestates_Script/{year}_{seasons.index(next_season)}_{next_season}.txt"
         visited = load_visited_anime(filename)
 
         for line in result:
@@ -43,9 +43,9 @@ def search_new_anime():
                     visited[mal_id] = "1"
                 else:
                     visited[mal_id] = "0"
+            complete_visited[mal_id] = "0"
 
         save_visited_anime(filename, visited)
-        complete_visited.update(visited)
 
         next_season = seasons[(seasons.index(next_season) + 1) % 4]
         if next_season == "winter":
@@ -56,12 +56,13 @@ def search_new_anime():
     complete_visited.update(load_visited_anime(filename))
 
     for anime in upcoming:
-        if str(anime["node"]["id"]) not in complete_visited:
-            if prompt_user_to_add(f"{anime['node']['title']} - https://myanimelist.net/anime/{anime['node']['id']}"):
-                complete_visited[anime["node"]["id"]] = "1"
+        id = str(anime["node"]["id"])
+        if id not in complete_visited:
+            if prompt_user_to_add(f"{anime['node']['title']} - https://myanimelist.net/anime/{id}"):
+                complete_visited[id] = "1"
             else:
-                complete_visited[anime["node"]["id"]] = "0"     
-
+                complete_visited[id] = "0"   
+    
     save_visited_anime(filename, complete_visited)
 
 
@@ -100,7 +101,7 @@ def create_catch_up_list():
     path = "./Savestates_Script/"
     catch_up_file = "./catch_up_list.txt"
     
-    with open(catch_up_file, "w") as catch_up_list:
+    with open(catch_up_file, "w", encoding="utf-8") as catch_up_list:
         for file in os.listdir(path):
             if file.endswith(".txt"):
                 with open(os.path.join(path, file), "r") as f:
@@ -108,15 +109,16 @@ def create_catch_up_list():
                     if file == "upcoming.txt":
                         name = "Upcoming"
                     else:
-                        season, year = file.split('_')
-                        name = f"Season: {season.capitalize()} - {year.split('.')[0]}"
+                        year, _, season = file.split('_')
+                        name = f"Season: {season.split('.')[0].capitalize()} - {year}"
                     
                     catch_up_list.write("############################################################\n")
                     catch_up_list.write(f"{name}\n")
                     catch_up_list.write("############################################################\n")
                     for line in lines:
                         if line.split()[-1] == "1":
-                            catch_up_list.write(line + "\n")
+                            details = get_details(id=line.split()[0], params={"fields": "id,title,num_list_users"})
+                            catch_up_list.write(f"{details['title']} - {details['num_list_users']} - https://myanimelist.net/anime/{details['id']}\n")
                     catch_up_list.write("\n\n")
 
 
