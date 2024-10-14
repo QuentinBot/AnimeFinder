@@ -128,6 +128,7 @@ def create_catch_up_list():
                         if line.split()[-1] == "1":
                             details = get_details(id=line.split()[0], params={"fields": "id,title,num_list_users"})
                             catch_up_list.write(f"{details['title']} - {details['num_list_users']} - https://myanimelist.net/anime/{details['id']}\n")
+                            # maybe keep sequence order in heap to avoid wrong order in catch_up_list
                     catch_up_list.write("\n\n")
 
 
