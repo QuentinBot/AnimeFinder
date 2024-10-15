@@ -12,7 +12,8 @@ def run():
         print("What would you like to do?")
         print("1: Search for new anime")
         print("2: Mark anime as caught up")
-        print("3: Exit")
+        print("3: Open catch-up list")
+        print("4: Exit")
         choice = input().strip().lower()
         if choice == "1":
             search_new_anime()
@@ -23,6 +24,8 @@ def run():
             finished_watching(id)
             print("Anime marked as caught up.\n")
         elif choice == "3":
+            os.system(f"start {project_path}catch_up_list.txt")
+        elif choice == "4":
             break
         else:
             print("Invalid choice. Please enter a number between 1 and 3.")
