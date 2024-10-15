@@ -4,6 +4,7 @@ from main import find_sequel_seasonal, find_upcoming, get_details
 
 
 seasons = ["winter", "spring", "summer", "fall"]
+project_path = "D:/CodingAdventures/MAL_API/"
 
 
 def run():
@@ -42,7 +43,7 @@ def search_new_anime():
             print("No results found.")
             break
 
-        filename = f"./Savestates_Script/{year}_{seasons.index(next_season)}_{next_season}.txt"
+        filename = project_path + f"Savestates_Script/{year}_{seasons.index(next_season)}_{next_season}.txt"
         visited = load_visited_anime(filename)
 
         for line in result:
@@ -61,7 +62,7 @@ def search_new_anime():
             year += 1
 
     upcoming = find_upcoming()
-    filename = f"./Savestates_Script/upcoming.txt"
+    filename = project_path + f"Savestates_Script/upcoming.txt"
     complete_visited.update(load_visited_anime(filename))
 
     for anime in upcoming:
@@ -107,8 +108,8 @@ def prompt_user_to_add(anime_info):
 
 
 def create_catch_up_list():
-    path = "./Savestates_Script/"
-    catch_up_file = "./catch_up_list.txt"
+    path = project_path + "Savestates_Script/"
+    catch_up_file = project_path + "catch_up_list.txt"
     
     with open(catch_up_file, "w", encoding="utf-8") as catch_up_list:
         for file in os.listdir(path):
@@ -139,9 +140,9 @@ def finished_watching(id):
         return
     
     if "start_season" in details:
-        filename = f"./Savestates_Script/{details['start_season']['year']}_{seasons.index(details['start_season']['season'])}_{details['start_season']['season']}.txt"
+        filename = project_path + f"Savestates_Script/{details['start_season']['year']}_{seasons.index(details['start_season']['season'])}_{details['start_season']['season']}.txt"
     else:
-        filename = "./Savestates_Script/upcoming.txt"
+        filename = project_path + "Savestates_Script/upcoming.txt"
 
     print("Updating catch-up list...")
     visited = load_visited_anime(filename)
