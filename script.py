@@ -4,7 +4,7 @@ from main import find_sequel_seasonal, find_upcoming, get_details
 
 
 seasons = ["winter", "spring", "summer", "fall"]
-project_path = "D:/CodingAdventures/MAL_API/"
+project_path = "D:/CodingAdventures/AnimeFinder/"
 
 
 def run():
