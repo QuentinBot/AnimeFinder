@@ -1,6 +1,7 @@
 import datetime
 import os
 from main import find_sequel_seasonal, find_upcoming, get_details
+import heapq
 
 
 seasons = ["winter", "spring", "summer", "fall"]
@@ -119,6 +120,7 @@ def create_catch_up_list():
         for file in os.listdir(path):
             if file.endswith(".txt"):
                 with open(os.path.join(path, file), "r") as f:
+                    heap = []
                     lines = f.read().splitlines()
                     if file == "upcoming.txt":
                         name = "Upcoming"
@@ -132,8 +134,12 @@ def create_catch_up_list():
                     for line in lines:
                         if line.split()[-1] == "1":
                             details = get_details(id=line.split()[0], params={"fields": "id,title,num_list_users"})
-                            catch_up_list.write(f"{details['title']} - {details['num_list_users']} - https://myanimelist.net/anime/{details['id']}\n")
-                            # maybe keep sequence order in heap to avoid wrong order in catch_up_list
+                            heapq.heappush(heap, (-details["num_list_users"], details)) # max heap to keep most popular at the top
+
+                    while heap:
+                        _, details = heapq.heappop(heap)
+                        catch_up_list.write(f"{details['title']} - {details['num_list_users']} - https://myanimelist.net/anime/{details['id']}\n")
+
                     catch_up_list.write("\n\n")
 
 
