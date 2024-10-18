@@ -59,6 +59,7 @@ def search_new_anime():
             complete_visited[mal_id] = "0"
 
         save_visited_anime(filename, visited)
+        print(f"Completed search for {next_season} {year} anime.")
 
         next_season = seasons[(seasons.index(next_season) + 1) % 4]
         if next_season == "winter":

@@ -26,7 +26,7 @@ def filter_prequel(data):
         if len(details["related_anime"]) > 0:
             media_type = anime["node"]["media_type"]
             filtered_anime = f"{media_type.upper()}: {anime['node']['title']} - {anime['node']['num_list_users']} - https://myanimelist.net/anime/{anime['node']['id']}"
-            print(filtered_anime)
+            # print(filtered_anime)
             prequels.append(filtered_anime)
     return prequels
 
@@ -79,6 +79,6 @@ if __name__ == '__main__':
     # find_upcoming()
     # find_sequel_seasonal(year=2025, season="spring")
     # find_sequel_seasonal(year=2025, season="summer")
-    main()
-    # find_sequel_seasonal()
+    # main()
+    find_sequel_seasonal()
 
