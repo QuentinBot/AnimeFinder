@@ -39,7 +39,7 @@ def search_new_anime():
     if next_season == "winter":
         year += 1
 
-    complete_visited = {}
+    already_processed = {} # keep track of already processed to avoid duplicates in upcoming
     while True:
         print(f"Searching for {next_season} {year} anime...")
         result = find_sequel_seasonal(year, next_season)
@@ -57,7 +57,7 @@ def search_new_anime():
                     visited[mal_id] = "1"
                 else:
                     visited[mal_id] = "0"
-            complete_visited[mal_id] = "0"
+            already_processed[mal_id] = "0"
 
         save_visited_anime(filename, visited)
         print(f"Completed search for {next_season} {year} anime.")
@@ -68,17 +68,18 @@ def search_new_anime():
 
     upcoming = find_upcoming()
     filename = project_path + f"Savestates_Script/upcoming.txt"
-    complete_visited.update(load_visited_anime(filename))
+    upcoming_visited = load_visited_anime(filename)
+    upcoming_visited.update(already_processed)
 
     for anime in upcoming:
         id = str(anime["node"]["id"])
-        if id not in complete_visited:
+        if id not in upcoming_visited:
             if prompt_user_to_add(f"{anime['node']['title']} - https://myanimelist.net/anime/{id}"):
-                complete_visited[id] = "1"
+                upcoming_visited[id] = "1"
             else:
-                complete_visited[id] = "0"   
+                upcoming_visited[id] = "0"   
     
-    save_visited_anime(filename, complete_visited)
+    save_visited_anime(filename, upcoming_visited)
 
 
 def load_visited_anime(filename):
