@@ -1,11 +1,12 @@
 import datetime
 import os
-from main import find_sequel_seasonal, find_upcoming, get_details
+from main import find_sequel_seasonal, find_upcoming, get_details, get_seasonal
 import heapq
 
 
 seasons = ["winter", "spring", "summer", "fall"]
 project_path = "D:/CodingAdventures/AnimeFinder/"
+CURRENT_VIEWER_THRESHOLD = 100000
 
 
 def run():
@@ -35,7 +36,25 @@ def run():
 def search_new_anime():
     now = datetime.datetime.now()
     year = now.year
-    next_season = seasons[((now.month - 1) // 3 + 1) % 4]
+    cur_season = seasons[(now.month - 1) // 3]
+    print("Checking for new anime in the current season...")
+    result = get_seasonal(year, cur_season)
+    
+    filename = project_path + f"Savestates_Script/current_season.txt"
+    visited = load_visited_anime(filename)
+
+    for anime in result["data"]:
+        if anime["node"]["num_list_users"] < CURRENT_VIEWER_THRESHOLD:
+            break
+
+        id = str(anime["node"]["id"])
+        if id not in visited:
+            input(f"{anime['node']['title']} - https://myanimelist.net/anime/{id} has reached the viewer threshold. Press any key to continue...")
+            visited[id] = "1"
+
+    save_visited_anime(filename, visited)
+
+    next_season = seasons[(seasons.index(cur_season) + 1) % 4]
     if next_season == "winter":
         year += 1
 
@@ -123,7 +142,9 @@ def create_catch_up_list():
                 with open(os.path.join(path, file), "r") as f:
                     heap = []
                     lines = f.read().splitlines()
-                    if file == "upcoming.txt":
+                    if file == "current_season.txt":
+                        continue
+                    elif file == "upcoming.txt":
                         name = "Upcoming"
                     else:
                         year, _, season = file.split('_')
