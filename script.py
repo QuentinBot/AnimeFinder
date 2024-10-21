@@ -30,7 +30,7 @@ def run():
         elif choice == "4":
             break
         else:
-            print("Invalid choice. Please enter a number between 1 and 3.")
+            print("Invalid choice. Please enter a number between 1 and 4.")
     
 
 def search_new_anime():
