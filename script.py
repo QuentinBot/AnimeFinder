@@ -14,8 +14,9 @@ def run():
         print("What would you like to do?")
         print("1: Search for new anime")
         print("2: Mark anime as caught up")
-        print("3: Open catch-up list")
-        print("4: Exit")
+        print("3: Add anime to catch-up list")
+        print("4: Open catch-up list")
+        print("5: Exit")
         choice = input().strip().lower()
         if choice == "1":
             search_new_anime()
@@ -23,14 +24,16 @@ def run():
             print("Search complete.\n")
         elif choice == "2":
             id = input("Enter the MyAnimeList ID of the anime you have finished watching: ")
-            finished_watching(id)
-            print("Anime marked as caught up.\n")
+            update_catch_up_list(id, "0")
         elif choice == "3":
-            os.system(f"start {project_path}catch_up_list.txt")
+            id = input("Enter the MyAnimeList ID of the anime you want to add to the catch-up list: ")
+            update_catch_up_list(id, "1")
         elif choice == "4":
+            os.system(f"start {project_path}catch_up_list.txt")
+        elif choice == "5" or choice == "exit":
             break
         else:
-            print("Invalid choice. Please enter a number between 1 and 4.")
+            print("Invalid choice. Please enter a number between 1 and 5.")
     
 
 def search_new_anime():
@@ -165,7 +168,7 @@ def create_catch_up_list():
                     catch_up_list.write("\n\n")
 
 
-def finished_watching(id):
+def update_catch_up_list(id, val):
     details = get_details(id, params={"fields": "start_season"})
     if "error" in details:
         print(f"Anime with ID {id} not found.\n")
@@ -178,9 +181,10 @@ def finished_watching(id):
 
     print("Updating catch-up list...")
     visited = load_visited_anime(filename)
-    visited[id] = "0"
+    visited[id] = val
     save_visited_anime(filename, visited)
-    create_catch_up_list()        
+    create_catch_up_list()   
+    print(f"{details["title"]} was updated.\n")
 
 
 if __name__ == '__main__':
