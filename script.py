@@ -16,7 +16,8 @@ def run():
         print("2: Mark anime as caught up")
         print("3: Add anime to catch-up list")
         print("4: Open catch-up list")
-        print("5: Exit")
+        print("5: Remove old seasons")
+        print("6: Exit")
         choice = input().strip().lower()
         if choice == "1":
             search_new_anime()
@@ -30,7 +31,11 @@ def run():
             update_catch_up_list(id, "1")
         elif choice == "4":
             os.system(f"start {project_path}catch_up_list.txt")
-        elif choice == "5" or choice == "exit":
+        elif choice == "5":
+            remove_old_seasons()
+            create_catch_up_list()
+            print("Old seasons removed.\n")
+        elif choice == "6" or choice == "exit":
             break
         else:
             print("Invalid choice. Please enter a number between 1 and 5.")
@@ -185,6 +190,18 @@ def update_catch_up_list(id, val):
     save_visited_anime(filename, visited)
     create_catch_up_list()   
     print(f"{details["title"]} was updated.\n")
+
+
+def remove_old_seasons():
+    now = datetime.datetime.now()
+    year = now.year
+    cur_season_i = (now.month - 1) // 3
+
+    for file in os.listdir(project_path + "Savestates_Script/"):
+        if file.startswith("20"):
+            split = file.split("_")
+            if int(split[0]) < year or (int(split[0]) == year and int(split[1]) < cur_season_i + 1):
+                os.remove(project_path + "Savestates_Script/" + file)
 
 
 if __name__ == '__main__':
