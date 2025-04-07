@@ -1,4 +1,6 @@
 import ttkbootstrap as ttk
+from ttkbootstrap.scrolled import ScrolledFrame
+import tkinter as tk
 import datetime
 
 SEASONS = ["Winter", "Spring", "Summer", "Fall"]
@@ -17,6 +19,10 @@ def validate_year(year):
     
 
 def gui():
+
+    def change_anime_status(label):
+        label.config(background="green")
+
     root = ttk.Window(title="Anime Recommender", themename="flatly", size=(800, 600))
     root.position_center()
     
@@ -43,6 +49,17 @@ def gui():
 
     search_season_button = ttk.Button(root, text="Search Selected Season", command=lambda: print(f"Searching {season_var.get()} {year_entry.get()}..."))
     search_season_button.pack(pady=5)
+
+    sequels_border_frame = tk.Frame(root, highlightbackground="black", highlightthickness=1, width=400, height=300)
+    sequels_border_frame.pack(pady=5)
+    sequels_frame = ScrolledFrame(sequels_border_frame, width=400, height=300, autohide=True)
+    sequels_frame.pack(pady=3, padx=3)
+
+    for x in range(20):
+        label = ttk.Label(sequels_frame, text=f"Sequel {x+1}")
+        # label.grid(row=x)
+        label.bind("<Button-1>", lambda event, label=label: change_anime_status(label))
+        label.pack(fill="x")
 
 
     root.mainloop()
