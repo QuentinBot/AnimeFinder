@@ -4,6 +4,7 @@ import tkinter as tk
 import datetime
 
 SEASONS = ["Winter", "Spring", "Summer", "Fall"]
+BACKGROUND_COLORS = ["white", "#ccffcc", "#ffcccc"]
 
 
 def get_current_season():
@@ -20,8 +21,11 @@ def validate_year(year):
 
 def gui():
 
-    def change_anime_status(label):
-        label.config(background="green")
+    def change_anime_status(label, label_data, direction):
+        new_index = (label_data[label] + direction) % len(BACKGROUND_COLORS)
+        label_data[label] = new_index
+        label.config(background=BACKGROUND_COLORS[new_index])
+        
 
     root = ttk.Window(title="Anime Recommender", themename="flatly", size=(800, 600))
     root.position_center()
@@ -55,10 +59,12 @@ def gui():
     sequels_frame = ScrolledFrame(sequels_border_frame, width=400, height=300, autohide=True)
     sequels_frame.pack(pady=3, padx=3)
 
+    label_data = {}
     for x in range(20):
-        label = ttk.Label(sequels_frame, text=f"Sequel {x+1}")
-        # label.grid(row=x)
-        label.bind("<Button-1>", lambda event, label=label: change_anime_status(label))
+        label = ttk.Label(sequels_frame, text=f"Sequel {x+1}", background="white")
+        label_data[label] = 0
+        label.bind("<Button-1>", lambda event, label=label, label_data=label_data: change_anime_status(label, label_data, 1))
+        label.bind("<Button-3>", lambda event, label=label, label_data=label_data: change_anime_status(label, label_data, -1))
         label.pack(fill="x")
 
 
