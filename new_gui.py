@@ -3,6 +3,8 @@ from ttkbootstrap.scrolled import ScrolledFrame
 import tkinter as tk
 import datetime
 
+import mal_access
+
 SEASONS = ["Winter", "Spring", "Summer", "Fall"]
 BACKGROUND_COLORS = ["white", "#ccffcc", "#ffcccc"]
 
@@ -60,8 +62,12 @@ def gui():
     sequels_frame.pack(pady=3, padx=3)
 
     label_data = {}
-    for x in range(20):
-        label = ttk.Label(sequels_frame, text=f"Sequel {x+1}", background="white")
+    seasonal_anime = mal_access.get_seasonal_anime(2025, "summer")
+    # upcoming_sequels = mal_access.get_upcoming_anime()
+    # TODO: Handle exceptions of requests module
+
+    for anime in seasonal_anime["data"]:
+        label = ttk.Label(sequels_frame, text=f"{anime['node']['title']} - {anime['node']['num_list_users']}", background="white")
         label_data[label] = 0
         label.bind("<Button-1>", lambda event, label=label, label_data=label_data: change_anime_status(label, label_data, 1))
         label.bind("<Button-3>", lambda event, label=label, label_data=label_data: change_anime_status(label, label_data, -1))
