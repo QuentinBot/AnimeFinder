@@ -3,7 +3,7 @@ from config import MAL_KEY
 
 auth = {"X-MAL-CLIENT-ID": MAL_KEY}
 
-
+# TODO: Handle exceptions of requests module
 def get_seasonal_anime(year, season, limit=100):
     params = {
         "nsfw": "true",

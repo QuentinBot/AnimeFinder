@@ -7,6 +7,7 @@ import mal_access
 
 SEASONS = ["Winter", "Spring", "Summer", "Fall"]
 BACKGROUND_COLORS = ["white", "#ccffcc", "#ffcccc"]
+label_data = {}
 
 
 def get_current_season():
@@ -21,13 +22,23 @@ def validate_year(year):
         return False
     
 
-def gui():
+def change_anime_status(label, label_data, direction):
+    new_index = (label_data[label] + direction) % len(BACKGROUND_COLORS)
+    label_data[label] = new_index
+    label.config(background=BACKGROUND_COLORS[new_index])
+    
+# TODO: Remove old elements from frame
+def show_seasonal_anime(year, season, frame):
+    seasonal_anime = mal_access.get_seasonal_anime(year, season)
+    for anime in seasonal_anime["data"]:
+        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime['node']['num_list_users']}", background="white")
+        label_data[label] = 0
+        label.bind("<Button-1>", lambda event, label=label, label_data=label_data: change_anime_status(label, label_data, 1))
+        label.bind("<Button-3>", lambda event, label=label, label_data=label_data: change_anime_status(label, label_data, -1))
+        label.pack(fill="x")
+    
 
-    def change_anime_status(label, label_data, direction):
-        new_index = (label_data[label] + direction) % len(BACKGROUND_COLORS)
-        label_data[label] = new_index
-        label.config(background=BACKGROUND_COLORS[new_index])
-        
+def gui():
 
     root = ttk.Window(title="Anime Recommender", themename="flatly", size=(800, 600))
     root.position_center()
@@ -53,26 +64,13 @@ def gui():
     season_menu = ttk.OptionMenu(season_frame, season_var, get_current_season(), *SEASONS)
     season_menu.pack(side="left", expand=True, padx=5)
 
-    search_season_button = ttk.Button(root, text="Search Selected Season", command=lambda: print(f"Searching {season_var.get()} {year_entry.get()}..."))
+    search_season_button = ttk.Button(root, text="Search Selected Season", command=lambda: show_seasonal_anime(year_entry.get(), season_var.get().lower(), sequels_frame))
     search_season_button.pack(pady=5)
 
     sequels_border_frame = tk.Frame(root, highlightbackground="black", highlightthickness=1, width=400, height=300)
     sequels_border_frame.pack(pady=5)
     sequels_frame = ScrolledFrame(sequels_border_frame, width=400, height=300, autohide=True)
     sequels_frame.pack(pady=3, padx=3)
-
-    label_data = {}
-    seasonal_anime = mal_access.get_seasonal_anime(2025, "summer")
-    # upcoming_sequels = mal_access.get_upcoming_anime()
-    # TODO: Handle exceptions of requests module
-
-    for anime in seasonal_anime["data"]:
-        label = ttk.Label(sequels_frame, text=f"{anime['node']['title']} - {anime['node']['num_list_users']}", background="white")
-        label_data[label] = 0
-        label.bind("<Button-1>", lambda event, label=label, label_data=label_data: change_anime_status(label, label_data, 1))
-        label.bind("<Button-3>", lambda event, label=label, label_data=label_data: change_anime_status(label, label_data, -1))
-        label.pack(fill="x")
-
 
     root.mainloop()
 
