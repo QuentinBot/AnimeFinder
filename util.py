@@ -33,6 +33,13 @@ def get_current_season():
     return SEASONS[(now.month - 1) // 3]
 
 
+def get_next_season():
+    now = datetime.datetime.now()
+    current_season_index = (now.month - 1) // 3
+    next_season_index = (current_season_index + 1) % len(SEASONS)
+    return SEASONS[next_season_index]
+
+
 def save_changes(season, year, save_data):
     print("Saving changes...")
     with open(f"{SAVE_PATH}{year}_{season}.json", "w") as file:
