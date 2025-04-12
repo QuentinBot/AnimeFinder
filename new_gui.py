@@ -76,6 +76,9 @@ def gui():
     sequels_frame = ScrolledFrame(sequels_border_frame, width=400, height=300, autohide=True)
     sequels_frame.pack(pady=3, padx=3)
 
+    save_button = ttk.Button(root, text="Save Changes", command=lambda: print("Changes saved!"))
+    save_button.pack(pady=5)
+
     root.mainloop()
 
 
