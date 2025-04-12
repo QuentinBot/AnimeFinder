@@ -27,9 +27,13 @@ def change_anime_status(label, label_data, direction):
     label_data[label] = new_index
     label.config(background=BACKGROUND_COLORS[new_index])
     
-# TODO: Remove old elements from frame
+
 def show_seasonal_anime(year, season, frame):
     seasonal_anime = mal_access.get_seasonal_anime(year, season)
+
+    for widget in frame.winfo_children():
+        widget.destroy()
+
     for anime in seasonal_anime["data"]:
         label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime['node']['num_list_users']}", background="white")
         label_data[label] = 0
