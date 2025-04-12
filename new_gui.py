@@ -67,7 +67,7 @@ def gui():
     year_frame.pack(pady=5)
     year_label = ttk.Label(year_frame, text="Enter Year:")
     year_label.pack(side="left", expand=True, padx=5)
-    year_entry = ttk.Spinbox(year_frame, from_=1916, to=datetime.datetime.now().year + 2, increment=1, width=5, validate="focus", validatecommand=(year_valid_function, "%P"))
+    year_entry = ttk.Spinbox(year_frame, from_=1916, to=datetime.datetime.now().year + 2, increment=1, width=5, validate="focus", validatecommand=(year_valid_function, "%P"), wrap=True, command=lambda: show_initial_season(year_entry.get(), season_var.get().lower(), sequels_frame))
     year_entry.set(datetime.datetime.now().year)
     year_entry.pack(side="left", expand=True, padx=5)
 
@@ -76,7 +76,7 @@ def gui():
     season_label = ttk.Label(season_frame, text="Select Season:")
     season_label.pack(side="left", expand=True, padx=5)
     season_var = ttk.StringVar()
-    season_menu = ttk.OptionMenu(season_frame, season_var, util.get_current_season(), *SEASONS)
+    season_menu = ttk.OptionMenu(season_frame, season_var, util.get_current_season(), *SEASONS, command=lambda val: show_initial_season(year_entry.get(), season_var.get().lower(), sequels_frame))
     season_menu.pack(side="left", expand=True, padx=5)
 
     search_season_button = ttk.Button(root, text="Search Selected Season", command=lambda: show_seasonal_anime(year_entry.get(), season_var.get().lower(), sequels_frame))
