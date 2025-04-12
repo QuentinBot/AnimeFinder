@@ -32,8 +32,22 @@ def show_seasonal_anime(year, season, frame):
         if anime_id not in save_data:
             save_data[anime_id] = 0
 
-        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime['node']['num_list_users']} - {anime_id}", background=BACKGROUND_COLORS[save_data[anime_id]])
+        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime_id} - {anime['node']['num_list_users']}", background=BACKGROUND_COLORS[save_data[anime_id]])
         
+        label.bind("<Button-1>", lambda event, label=label, save_data=save_data, anime_id=anime_id: change_anime_status(label, save_data, 1, anime_id))
+        label.bind("<Button-3>", lambda event, label=label, save_data=save_data, anime_id=anime_id: change_anime_status(label, save_data, -1, anime_id))
+        label.pack(fill="x")
+
+
+def show_initial_season(year, season, frame):
+    global save_data
+    save_data = util.load_save_data(year, season)
+
+    for widget in frame.winfo_children():
+        widget.destroy()
+    
+    for anime_id, status in save_data.items():
+        label = ttk.Label(frame, text=f"Anime ID: {anime_id}", background=BACKGROUND_COLORS[status])
         label.bind("<Button-1>", lambda event, label=label, save_data=save_data, anime_id=anime_id: change_anime_status(label, save_data, 1, anime_id))
         label.bind("<Button-3>", lambda event, label=label, save_data=save_data, anime_id=anime_id: change_anime_status(label, save_data, -1, anime_id))
         label.pack(fill="x")
@@ -76,8 +90,9 @@ def gui():
     save_button = ttk.Button(root, text="Save Changes", command=lambda: util.save_changes(season_var.get().lower(), year_entry.get(), save_data))
     save_button.pack(pady=5)
 
-    root.mainloop()
+    show_initial_season(year_entry.get(), season_var.get().lower(), sequels_frame)
 
+    root.mainloop()
 
 
 if __name__ == "__main__":
