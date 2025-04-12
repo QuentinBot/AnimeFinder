@@ -1,6 +1,7 @@
 config.py
 Savestates/seq*
 Savestates_Script/*
+data/*
 catch_up_list.txt
 
 # Byte-compiled / optimized / DLL files
