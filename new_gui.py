@@ -8,6 +8,7 @@ import util
 from util import SEASONS, BACKGROUND_COLORS
 
 
+CURRENT_SEASON_THRESHOLD = 100000
 save_data = {}
     
 
@@ -92,6 +93,41 @@ def show_initial_upcoming(frame):
         label.pack(fill="x")
 
 
+def show_current_season_anime(frame):
+    current_season_anime = mal_access.get_seasonal_anime(datetime.datetime.now().year, util.get_current_season().lower())
+    current_season_data = util.load_current_season_data()
+
+    for widget in frame.winfo_children():
+        widget.destroy()
+    
+    for anime in current_season_anime["data"]:
+        anime_id = str(anime['node']['id'])
+
+        if anime["node"]["num_list_users"] < CURRENT_SEASON_THRESHOLD:
+            break
+
+        if anime_id not in current_season_data:
+            current_season_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0}
+
+        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime['node']['id']} - {anime['node']['num_list_users']}", background=BACKGROUND_COLORS[current_season_data[anime_id]["status"]])
+        label.bind("<Button-1>", lambda event, label=label: change_anime_status_upcoming(label, 1))
+        label.bind("<Button-3>", lambda event, label=label: change_anime_status_upcoming(label, -1))
+        label.pack(fill="x")
+
+
+def show_initial_current_season(frame):
+    current_season_data = util.load_current_season_data()
+
+    for widget in frame.winfo_children():
+        widget.destroy()
+    
+    for anime_id, data in current_season_data.items():
+        label = ttk.Label(frame, text=f"{data['title']} - {anime_id} - {data['num_list_users']}", background=BACKGROUND_COLORS[data["status"]])
+        label.bind("<Button-1>", lambda event, label=label: change_anime_status_upcoming(label, 1))
+        label.bind("<Button-3>", lambda event, label=label: change_anime_status_upcoming(label, -1))
+        label.pack(fill="x")
+
+
 # TODO: Add current season recommendations
 # TODO: Don't rely on global variable
 def gui():
@@ -104,6 +140,7 @@ def gui():
     initial_label = ttk.Label(root, text="Anime Recommender", font=("Helvetica", 16))
     initial_label.pack(pady=10)
 
+    # Seasonal Anime
     seasonal_root = tk.Frame(root, highlightbackground="black", highlightthickness=1)
     seasonal_root.pack(pady=5, expand=True, side="left")   
 
@@ -136,6 +173,26 @@ def gui():
 
     show_initial_season(year_entry.get(), season_var.get().lower(), sequels_frame)
 
+
+    # Current Season Anime
+    current_season_root = tk.Frame(root, highlightbackground="black", highlightthickness=1)
+    current_season_root.pack(pady=5, expand=True, side="left")
+
+    current_season_button = ttk.Button(current_season_root, text="Search Current Season", command=lambda: show_current_season_anime(current_season_frame))
+    current_season_button.pack(pady=5)
+
+    current_season_border_frame = tk.Frame(current_season_root, highlightbackground="black", highlightthickness=1, width=400, height=300)
+    current_season_border_frame.pack(pady=5, padx=5)
+    current_season_frame = ScrolledFrame(current_season_border_frame, width=400, height=300, autohide=True)
+    current_season_frame.pack(pady=3, padx=3)
+
+    save_current_season_button = ttk.Button(current_season_root, text="Save Changes", command=lambda: util.save_current_season_changes(current_season_frame))
+    save_current_season_button.pack(pady=5)
+
+    show_initial_current_season(current_season_frame)
+
+
+    # Upcoming Anime
     upcoming_root = tk.Frame(root, highlightbackground="black", highlightthickness=1)
     upcoming_root.pack(pady=5, expand=True, side="left") 
 
