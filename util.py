@@ -6,6 +6,7 @@ SEASONS = ["Winter", "Spring", "Summer", "Fall"]
 BACKGROUND_COLORS = ["white", "#ccffcc", "#ffcccc"]
 SAVE_PATH = "./data/"
 MIN_USERS_THRESHOLD = 10000
+CURRENT_SEASON_THRESHOLD = 100000
 
 
 def filter_sequels(anime_list):

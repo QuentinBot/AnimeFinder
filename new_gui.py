@@ -5,10 +5,7 @@ import datetime
 
 import mal_access
 import util
-from util import SEASONS, BACKGROUND_COLORS
-
-
-CURRENT_SEASON_THRESHOLD = 100000
+from util import SEASONS, BACKGROUND_COLORS, CURRENT_SEASON_THRESHOLD
 
 
 def change_anime_status(label, direction):
