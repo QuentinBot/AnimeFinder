@@ -93,6 +93,7 @@ def show_initial_upcoming(frame):
 
 
 # TODO: Add current season recommendations
+# TODO: Don't rely on global variable
 def gui():
 
     root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 600))
