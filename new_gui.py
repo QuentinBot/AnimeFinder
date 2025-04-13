@@ -12,8 +12,8 @@ save_data = {}
     
 
 def change_anime_status(label, save_data, direction, anime_id):
-    new_index = (save_data[anime_id] + direction) % len(BACKGROUND_COLORS)
-    save_data[anime_id] = new_index
+    new_index = (save_data[anime_id]["status"] + direction) % len(BACKGROUND_COLORS)
+    save_data[anime_id]["status"] = new_index
     label.config(background=BACKGROUND_COLORS[new_index])
     
 
@@ -30,9 +30,9 @@ def show_seasonal_anime(year, season, frame):
         anime_id = str(anime['node']['id'])
         
         if anime_id not in save_data:
-            save_data[anime_id] = 0
+            save_data[anime_id] = {"title": anime['node']['title'], "num_list_users": anime['node']['num_list_users'], "media_type": anime['node']['media_type'], "status": 0}
 
-        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime_id} - {anime['node']['num_list_users']}", background=BACKGROUND_COLORS[save_data[anime_id]])
+        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime_id} - {anime['node']['num_list_users']}", background=BACKGROUND_COLORS[save_data[anime_id]["status"]])
         
         label.bind("<Button-1>", lambda event, label=label, save_data=save_data, anime_id=anime_id: change_anime_status(label, save_data, 1, anime_id))
         label.bind("<Button-3>", lambda event, label=label, save_data=save_data, anime_id=anime_id: change_anime_status(label, save_data, -1, anime_id))
@@ -46,14 +46,13 @@ def show_initial_season(year, season, frame):
     for widget in frame.winfo_children():
         widget.destroy()
     
-    for anime_id, status in save_data.items():
-        label = ttk.Label(frame, text=f"Anime ID: {anime_id}", background=BACKGROUND_COLORS[status])
+    for anime_id, data in save_data.items():
+        label = ttk.Label(frame, text=f"{data["title"]} - {anime_id} - {data["num_list_users"]}", background=BACKGROUND_COLORS[data["status"]])
         label.bind("<Button-1>", lambda event, label=label, save_data=save_data, anime_id=anime_id: change_anime_status(label, save_data, 1, anime_id))
         label.bind("<Button-3>", lambda event, label=label, save_data=save_data, anime_id=anime_id: change_anime_status(label, save_data, -1, anime_id))
         label.pack(fill="x")
 
 
-# TODO: Fix save format containing all necessary data (title, anime_id, num_list_users, media_type)
 # TODO: Add upcoming anime
 # TODO: Add current season recommendations
 def gui():
