@@ -117,6 +117,7 @@ def show_initial_current_season(frame):
 
 
 # TODO: Reduce redundancy
+# TODO: Change logic to use three labels per anime instead of one label with multiple lines
 # TODO: Make prettier
 def gui():
 
