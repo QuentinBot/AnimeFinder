@@ -36,19 +36,6 @@ def show_seasonal_anime(year, season, frame):
         label.pack(fill="x")
 
 
-def show_initial_season(year, season, frame):
-    seasonal_data = util.load_save_data(f"{year}_{season}")
-
-    for widget in frame.winfo_children():
-        widget.destroy()
-    
-    for anime_id, data in seasonal_data.items():
-        label = ttk.Label(frame, text=f"{data["title"]} - {anime_id} - {data["num_list_users"]}", background=BACKGROUND_COLORS[data["status"]])
-        label.bind("<Button-1>", lambda event, label=label: change_anime_status(label, 1))
-        label.bind("<Button-3>", lambda event, label=label: change_anime_status(label, -1))
-        label.pack(fill="x")
-
-
 def show_upcoming_anime(frame):
     upcoming_anime = mal_access.get_upcoming_anime()
     upcoming_data = util.load_save_data("upcoming")
@@ -63,19 +50,6 @@ def show_upcoming_anime(frame):
             upcoming_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0}
 
         label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime['node']['id']} - {anime['node']['num_list_users']}", background=BACKGROUND_COLORS[upcoming_data[anime_id]["status"]])
-        label.bind("<Button-1>", lambda event, label=label: change_anime_status(label, 1))
-        label.bind("<Button-3>", lambda event, label=label: change_anime_status(label, -1))
-        label.pack(fill="x")
-
-
-def show_initial_upcoming(frame):
-    upcoming_data = util.load_save_data("upcoming")
-
-    for widget in frame.winfo_children():
-        widget.destroy()
-    
-    for anime_id, data in upcoming_data.items():
-        label = ttk.Label(frame, text=f"{data['title']} - {anime_id} - {data['num_list_users']}", background=BACKGROUND_COLORS[data["status"]])
         label.bind("<Button-1>", lambda event, label=label: change_anime_status(label, 1))
         label.bind("<Button-3>", lambda event, label=label: change_anime_status(label, -1))
         label.pack(fill="x")
@@ -103,13 +77,13 @@ def show_current_season_anime(frame):
         label.pack(fill="x")
 
 
-def show_initial_current_season(frame):
-    current_season_data = util.load_save_data("current_season")
+def show_initial_anime_data(path, frame):
+    stored_data = util.load_save_data(path)
 
     for widget in frame.winfo_children():
         widget.destroy()
     
-    for anime_id, data in current_season_data.items():
+    for anime_id, data in stored_data.items():
         label = ttk.Label(frame, text=f"{data['title']} - {anime_id} - {data['num_list_users']}", background=BACKGROUND_COLORS[data["status"]])
         label.bind("<Button-1>", lambda event, label=label: change_anime_status(label, 1))
         label.bind("<Button-3>", lambda event, label=label: change_anime_status(label, -1))
@@ -138,7 +112,7 @@ def gui():
     year_frame.pack(pady=5)
     year_label = ttk.Label(year_frame, text="Enter Year:")
     year_label.pack(side="left", expand=True, padx=5)
-    year_entry = ttk.Spinbox(year_frame, from_=1916, to=datetime.datetime.now().year + 3, increment=1, width=5, validate="focus", validatecommand=(year_valid_function, "%P"), wrap=True, command=lambda: show_initial_season(year_entry.get(), season_var.get().lower(), sequels_frame))
+    year_entry = ttk.Spinbox(year_frame, from_=1916, to=datetime.datetime.now().year + 3, increment=1, width=5, validate="focus", validatecommand=(year_valid_function, "%P"), wrap=True, command=lambda: show_initial_anime_data(f"{year_entry.get()}_{season_var.get().lower()}", sequels_frame))
     year_entry.set(datetime.datetime.now().year)
     year_entry.pack(side="left", expand=True, padx=5)
 
@@ -147,7 +121,7 @@ def gui():
     season_label = ttk.Label(season_frame, text="Select Season:")
     season_label.pack(side="left", expand=True, padx=5)
     season_var = ttk.StringVar()
-    season_menu = ttk.OptionMenu(season_frame, season_var, util.get_next_season(), *SEASONS, command=lambda val: show_initial_season(year_entry.get(), season_var.get().lower(), sequels_frame))
+    season_menu = ttk.OptionMenu(season_frame, season_var, util.get_next_season(), *SEASONS, command=lambda val: show_initial_anime_data(f"{year_entry.get()}_{season_var.get().lower()}", sequels_frame))
     season_menu.pack(side="left", expand=True, padx=5)
 
     search_season_button = ttk.Button(seasonal_root, text="Search Selected Season", command=lambda: show_seasonal_anime(year_entry.get(), season_var.get().lower(), sequels_frame))
@@ -161,7 +135,7 @@ def gui():
     save_seasonal_button = ttk.Button(seasonal_root, text="Save Changes", command=lambda: util.save_changes(f"{year_entry.get()}_{season_var.get().lower()}", sequels_frame))
     save_seasonal_button.pack(pady=5)
 
-    show_initial_season(year_entry.get(), season_var.get().lower(), sequels_frame)
+    show_initial_anime_data(f"{year_entry.get()}_{season_var.get().lower()}", sequels_frame)
 
 
     # Current Season Anime
@@ -179,7 +153,7 @@ def gui():
     save_current_season_button = ttk.Button(current_season_root, text="Save Changes", command=lambda: util.save_changes("current_season", current_season_frame))
     save_current_season_button.pack(pady=5)
 
-    show_initial_current_season(current_season_frame)
+    show_initial_anime_data("current_season", current_season_frame)
 
 
     # Upcoming Anime
@@ -197,7 +171,7 @@ def gui():
     save_upcoming_button = ttk.Button(upcoming_root, text="Save Changes", command=lambda: util.save_changes("upcoming", upcoming_frame))
     save_upcoming_button.pack(pady=5)
 
-    show_initial_upcoming(upcoming_frame)
+    show_initial_anime_data("upcoming", upcoming_frame)
 
     root.mainloop()
 
