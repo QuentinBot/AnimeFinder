@@ -15,66 +15,45 @@ def change_anime_status(label, direction):
     label.config(background=BACKGROUND_COLORS[new_index])
 
 
-def show_seasonal_anime(year, season, frame):
-    seasonal_data = util.load_save_data(f"{year}_{season}")
-    seasonal_anime = mal_access.get_seasonal_anime(year, season)
-    seasonal_anime = util.filter_sequels(seasonal_anime)
-    
+def refresh_frame_data(frame, retrieved_data, saved_data, user_threshold=0):
     for widget in frame.winfo_children():
         widget.destroy()
     
-    for anime in seasonal_anime:
+    for anime in retrieved_data:
         anime_id = str(anime['node']['id'])
-        
-        if anime_id not in seasonal_data:
-            seasonal_data[anime_id] = {"title": anime['node']['title'], "num_list_users": anime['node']['num_list_users'], "media_type": anime['node']['media_type'], "status": 0}
 
-        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime_id} - {anime['node']['num_list_users']}", background=BACKGROUND_COLORS[seasonal_data[anime_id]["status"]])
-        
+        if anime["node"]["num_list_users"] < user_threshold:
+            break
+
+        if anime_id not in saved_data:
+            saved_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0}
+
+        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime['node']['id']} - {anime['node']['num_list_users']}", background=BACKGROUND_COLORS[saved_data[anime_id]["status"]])
         label.bind("<Button-1>", lambda event, label=label: change_anime_status(label, 1))
         label.bind("<Button-3>", lambda event, label=label: change_anime_status(label, -1))
         label.pack(fill="x")
+
+
+def show_seasonal_anime(year, season, frame):
+    retrieved_seasonal_anime_data = mal_access.get_seasonal_anime(year, season)
+    filtered_seasonal_anime_data = util.filter_sequels(retrieved_seasonal_anime_data)
+    saved_seasonal_data = util.load_save_data(f"{year}_{season}")
+    
+    refresh_frame_data(frame, filtered_seasonal_anime_data, saved_seasonal_data)
 
 
 def show_upcoming_anime(frame):
-    upcoming_anime = mal_access.get_upcoming_anime()
-    upcoming_data = util.load_save_data("upcoming")
+    retrieved_upcoming_anime_data = mal_access.get_upcoming_anime()
+    saved_upcoming_data = util.load_save_data("upcoming")
 
-    for widget in frame.winfo_children():
-        widget.destroy()
-
-    for anime in upcoming_anime["data"]:
-        anime_id = str(anime['node']['id'])
-
-        if anime_id not in upcoming_data:
-            upcoming_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0}
-
-        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime['node']['id']} - {anime['node']['num_list_users']}", background=BACKGROUND_COLORS[upcoming_data[anime_id]["status"]])
-        label.bind("<Button-1>", lambda event, label=label: change_anime_status(label, 1))
-        label.bind("<Button-3>", lambda event, label=label: change_anime_status(label, -1))
-        label.pack(fill="x")
+    refresh_frame_data(frame, retrieved_upcoming_anime_data["data"], saved_upcoming_data)
 
 
 def show_current_season_anime(frame):
-    current_season_anime = mal_access.get_seasonal_anime(datetime.datetime.now().year, util.get_current_season().lower())
-    current_season_data = util.load_save_data("current_season")
+    retrieved_current_season_anime_data = mal_access.get_seasonal_anime(datetime.datetime.now().year, util.get_current_season().lower())
+    saved_current_season_data = util.load_save_data("current_season")
 
-    for widget in frame.winfo_children():
-        widget.destroy()
-    
-    for anime in current_season_anime["data"]:
-        anime_id = str(anime['node']['id'])
-
-        if anime["node"]["num_list_users"] < CURRENT_SEASON_THRESHOLD:
-            break
-
-        if anime_id not in current_season_data:
-            current_season_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0}
-
-        label = ttk.Label(frame, text=f"{anime['node']['title']} - {anime['node']['id']} - {anime['node']['num_list_users']}", background=BACKGROUND_COLORS[current_season_data[anime_id]["status"]])
-        label.bind("<Button-1>", lambda event, label=label: change_anime_status(label, 1))
-        label.bind("<Button-3>", lambda event, label=label: change_anime_status(label, -1))
-        label.pack(fill="x")
+    refresh_frame_data(frame, retrieved_current_season_anime_data["data"], saved_current_season_data, CURRENT_SEASON_THRESHOLD)
 
 
 def show_initial_anime_data(path, frame):
@@ -90,7 +69,6 @@ def show_initial_anime_data(path, frame):
         label.pack(fill="x")
 
 
-# TODO: Reduce redundancy
 # TODO: Add color for new added
 # TODO: Change logic to use three labels per anime instead of one label with multiple lines
 # TODO: Make prettier
