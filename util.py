@@ -41,21 +41,8 @@ def get_next_season():
     return SEASONS[next_season_index]
 
 
-def save_changes(season, year, frame):
-    print("Saving seasonal changes...")
-    save_data = {}
-    for widget in frame.winfo_children():
-        num_list_users = widget.cget("text").split(" - ")[-1]
-        anime_id = widget.cget("text").split(" - ")[-2]
-        title = " - ".join(widget.cget("text").split(" - ")[:-2])
-        save_data[anime_id] = {"title": title, "num_list_users": num_list_users, "status": BACKGROUND_COLORS.index(str(widget.cget("background")))}
-
-    with open(f"{SAVE_PATH}{year}_{season}.json", "w") as file:
-        json.dump(save_data, file, indent=4)   
-
-
-def save_upcoming_changes(frame):
-    print("Saving upcoming changes...")
+def save_changes(path, frame):
+    print("Saving changes...")
     save_data = {}
     for widget in frame.winfo_children():
         num_list_users = widget.cget("text").split(" - ")[-1]
@@ -63,42 +50,13 @@ def save_upcoming_changes(frame):
         title = " - ".join(widget.cget("text").split(" - ")[:-2])
         save_data[anime_id] = {"title": title, "num_list_users": num_list_users, "status": BACKGROUND_COLORS.index(str(widget.cget("background")))}
     
-    with open(f"{SAVE_PATH}upcoming.json", "w") as file:
+    with open(f"{SAVE_PATH}{path}.json", "w") as file:
         json.dump(save_data, file, indent=4)
 
 
-def save_current_season_changes(frame):
-    print("Saving current season changes...")
-    save_data = {}
-    for widget in frame.winfo_children():
-        num_list_users = widget.cget("text").split(" - ")[-1]
-        anime_id = widget.cget("text").split(" - ")[-2]
-        title = " - ".join(widget.cget("text").split(" - ")[:-2])
-        save_data[anime_id] = {"title": title, "num_list_users": num_list_users, "status": BACKGROUND_COLORS.index(str(widget.cget("background")))}
-    
-    with open(f"{SAVE_PATH}current_season.json", "w") as file:
-        json.dump(save_data, file, indent=4)
-
-
-def load_save_data(year, season):
+def load_save_data(path):
     try:
-        with open(f"{SAVE_PATH}{year}_{season}.json", "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {}
-
-
-def load_upcoming_data():
-    try:
-        with open(f"{SAVE_PATH}upcoming.json", "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {}
-    
-
-def load_current_season_data():
-    try:
-        with open(f"{SAVE_PATH}current_season.json", "r") as file:
+        with open(f"{SAVE_PATH}{path}.json", "r") as file:
             return json.load(file)
     except FileNotFoundError:
         return {}

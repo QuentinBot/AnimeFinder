@@ -16,7 +16,7 @@ def change_anime_status(label, direction):
 
 
 def show_seasonal_anime(year, season, frame):
-    seasonal_data = util.load_save_data(year, season)
+    seasonal_data = util.load_save_data(f"{year}_{season}")
     seasonal_anime = mal_access.get_seasonal_anime(year, season)
     seasonal_anime = util.filter_sequels(seasonal_anime)
     
@@ -37,7 +37,7 @@ def show_seasonal_anime(year, season, frame):
 
 
 def show_initial_season(year, season, frame):
-    seasonal_data = util.load_save_data(year, season)
+    seasonal_data = util.load_save_data(f"{year}_{season}")
 
     for widget in frame.winfo_children():
         widget.destroy()
@@ -51,7 +51,7 @@ def show_initial_season(year, season, frame):
 
 def show_upcoming_anime(frame):
     upcoming_anime = mal_access.get_upcoming_anime()
-    upcoming_data = util.load_upcoming_data()
+    upcoming_data = util.load_save_data("upcoming")
 
     for widget in frame.winfo_children():
         widget.destroy()
@@ -69,7 +69,7 @@ def show_upcoming_anime(frame):
 
 
 def show_initial_upcoming(frame):
-    upcoming_data = util.load_upcoming_data()
+    upcoming_data = util.load_save_data("upcoming")
 
     for widget in frame.winfo_children():
         widget.destroy()
@@ -83,7 +83,7 @@ def show_initial_upcoming(frame):
 
 def show_current_season_anime(frame):
     current_season_anime = mal_access.get_seasonal_anime(datetime.datetime.now().year, util.get_current_season().lower())
-    current_season_data = util.load_current_season_data()
+    current_season_data = util.load_save_data("current_season")
 
     for widget in frame.winfo_children():
         widget.destroy()
@@ -104,7 +104,7 @@ def show_current_season_anime(frame):
 
 
 def show_initial_current_season(frame):
-    current_season_data = util.load_current_season_data()
+    current_season_data = util.load_save_data("current_season")
 
     for widget in frame.winfo_children():
         widget.destroy()
@@ -117,6 +117,7 @@ def show_initial_current_season(frame):
 
 
 # TODO: Reduce redundancy
+# TODO: Add color for new added
 # TODO: Change logic to use three labels per anime instead of one label with multiple lines
 # TODO: Make prettier
 def gui():
@@ -157,7 +158,7 @@ def gui():
     sequels_frame = ScrolledFrame(sequels_border_frame, width=400, height=300, autohide=True)
     sequels_frame.pack(pady=3, padx=3)
 
-    save_seasonal_button = ttk.Button(seasonal_root, text="Save Changes", command=lambda: util.save_changes(season_var.get().lower(), year_entry.get(), sequels_frame))
+    save_seasonal_button = ttk.Button(seasonal_root, text="Save Changes", command=lambda: util.save_changes(f"{year_entry.get()}_{season_var.get().lower()}", sequels_frame))
     save_seasonal_button.pack(pady=5)
 
     show_initial_season(year_entry.get(), season_var.get().lower(), sequels_frame)
@@ -175,7 +176,7 @@ def gui():
     current_season_frame = ScrolledFrame(current_season_border_frame, width=400, height=300, autohide=True)
     current_season_frame.pack(pady=3, padx=3)
 
-    save_current_season_button = ttk.Button(current_season_root, text="Save Changes", command=lambda: util.save_current_season_changes(current_season_frame))
+    save_current_season_button = ttk.Button(current_season_root, text="Save Changes", command=lambda: util.save_changes("current_season", current_season_frame))
     save_current_season_button.pack(pady=5)
 
     show_initial_current_season(current_season_frame)
@@ -193,7 +194,7 @@ def gui():
     upcoming_frame = ScrolledFrame(upcoming_border_frame, width=400, height=300, autohide=True)
     upcoming_frame.pack(pady=3, padx=3)
 
-    save_upcoming_button = ttk.Button(upcoming_root, text="Save Changes", command=lambda: util.save_upcoming_changes(upcoming_frame))
+    save_upcoming_button = ttk.Button(upcoming_root, text="Save Changes", command=lambda: util.save_changes("upcoming", upcoming_frame))
     save_upcoming_button.pack(pady=5)
 
     show_initial_upcoming(upcoming_frame)
