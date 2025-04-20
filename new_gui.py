@@ -220,7 +220,7 @@ def gui():
     upcoming_frame = ScrolledFrame(upcoming_border_frame, width=400, height=300, autohide=True)
     upcoming_frame.pack()
 
-    save_upcoming_button = ttk.Button(upcoming_root, text="Save Changes", command=lambda: util.save_changes_new("upcoming", upcoming_frame))
+    save_upcoming_button = ttk.Button(upcoming_root, text="Save Changes", command=lambda: util.save_changes("upcoming", upcoming_frame))
     save_upcoming_button.pack(pady=5)
 
     show_initial_anime_data("upcoming", upcoming_frame)

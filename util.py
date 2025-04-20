@@ -44,19 +44,6 @@ def get_next_season():
     return SEASONS[next_season_index]
 
 
-def save_changes(path, frame):
-    print("Saving changes...")
-    save_data = {}
-    for widget in frame.winfo_children():
-        num_list_users = widget.cget("text").split(" - ")[-1]
-        anime_id = widget.cget("text").split(" - ")[-2]
-        title = " - ".join(widget.cget("text").split(" - ")[:-2])
-        save_data[anime_id] = {"title": title, "num_list_users": num_list_users, "status": BACKGROUND_COLORS.index(str(widget.cget("background")))}
-    
-    with open(f"{SAVE_PATH}{path}.json", "w") as file:
-        json.dump(save_data, file, indent=4)
-
-
 def load_save_data(path):
     try:
         with open(f"{SAVE_PATH}{path}.json", "r") as file:
@@ -65,7 +52,7 @@ def load_save_data(path):
         return {}
     
 
-def save_changes_new(path, frame):
+def save_changes(path, frame):
     print("Saving changes...")
     save_data = {}
     for row_frame in frame.winfo_children():
