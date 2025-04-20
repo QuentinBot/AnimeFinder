@@ -69,6 +69,47 @@ def show_initial_anime_data(path, frame):
         label.pack(fill="x")
 
 
+def show_initial_anime_data_new(path, frame):
+    stored_data = util.load_save_data(path)
+
+    for widget in frame.winfo_children():
+        widget.destroy()
+    
+
+    for anime_id, data in stored_data.items():
+        new_frame = tk.Frame(frame)
+        new_frame.pack(fill="x")
+
+        new_frame.configure(background=BACKGROUND_COLORS[data["status"]])
+
+        new_frame.columnconfigure(0, weight=1)
+        new_frame.columnconfigure(1, weight=0)
+        new_frame.columnconfigure(2, weight=0)
+
+        title_label = ttk.Label(new_frame, text=data["title"], background=BACKGROUND_COLORS[data["status"]])
+        title_label.grid(row=0, column=0, sticky="w", padx=5)
+        id_label = ttk.Label(new_frame, text=anime_id, background=BACKGROUND_COLORS[data["status"]], anchor="center", width=6)
+        id_label.grid(row=0, column=1, sticky="ns")
+        num_list_users_label = ttk.Label(new_frame, text=data["num_list_users"], background=BACKGROUND_COLORS[data["status"]], anchor="center", width=7)
+        num_list_users_label.grid(row=0, column=2, padx=(0, 15), sticky="ns")
+
+
+def initialise_scrollbar_header(frame):
+    new_frame = tk.Frame(frame)
+    new_frame.pack(fill="x")
+    new_frame.columnconfigure(0, weight=1)
+    new_frame.columnconfigure(1, weight=0)
+    new_frame.columnconfigure(2, weight=0)
+    title_label = ttk.Label(new_frame, text="Title", anchor="w")
+    title_label.grid(row=0, column=0, sticky="w", padx=7)
+    id_label = ttk.Label(new_frame, text="ID", width=6, anchor="center")
+    id_label.grid(row=0, column=1, sticky="ns")
+    num_list_users_label = ttk.Label(new_frame, text="Users", width=7, anchor="center")
+    num_list_users_label.grid(row=0, column=2, padx=(0, 17), sticky="ns")
+    horizontal_separator = ttk.Separator(frame, orient="horizontal")
+    horizontal_separator.pack(fill="x")
+
+
 # TODO: Change logic to use three labels per anime instead of one label with multiple lines
 # TODO: Make prettier
 def gui():
@@ -109,6 +150,8 @@ def gui():
 
     sequels_border_frame = tk.Frame(seasonal_root, highlightbackground="black", highlightthickness=1, width=400, height=300)
     sequels_border_frame.pack(pady=5, padx=5)
+    initialise_scrollbar_header(sequels_border_frame)
+
     sequels_frame = ScrolledFrame(sequels_border_frame, width=400, height=300, autohide=True)
     sequels_frame.pack(pady=3, padx=3)
 
@@ -130,6 +173,8 @@ def gui():
 
     current_season_border_frame = tk.Frame(current_season_root, highlightbackground="black", highlightthickness=1, width=400, height=300)
     current_season_border_frame.pack(pady=5, padx=5)
+    initialise_scrollbar_header(current_season_border_frame)
+
     current_season_frame = ScrolledFrame(current_season_border_frame, width=400, height=300, autohide=True)
     current_season_frame.pack(pady=3, padx=3)
 
@@ -151,13 +196,16 @@ def gui():
 
     upcoming_border_frame = tk.Frame(upcoming_root, highlightbackground="black", highlightthickness=1, width=400, height=300)
     upcoming_border_frame.pack(pady=5, padx=5)
+    
+    initialise_scrollbar_header(upcoming_border_frame)
+
     upcoming_frame = ScrolledFrame(upcoming_border_frame, width=400, height=300, autohide=True)
-    upcoming_frame.pack(pady=3, padx=3)
+    upcoming_frame.pack()
 
     save_upcoming_button = ttk.Button(upcoming_root, text="Save Changes", command=lambda: util.save_changes("upcoming", upcoming_frame))
     save_upcoming_button.pack(pady=5)
 
-    show_initial_anime_data("upcoming", upcoming_frame)
+    show_initial_anime_data_new("upcoming", upcoming_frame)
 
     root.mainloop()
 
