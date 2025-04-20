@@ -69,22 +69,24 @@ def show_initial_anime_data(path, frame):
         label.pack(fill="x")
 
 
-# TODO: Add color for new added
 # TODO: Change logic to use three labels per anime instead of one label with multiple lines
 # TODO: Make prettier
 def gui():
 
-    root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 600))
+    root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 700))
     root.position_center()
  
     year_valid_function = root.register(util.validate_year)
 
-    initial_label = ttk.Label(root, text="Anime Recommender", font=("Helvetica", 16))
-    initial_label.pack(pady=10)
+    initial_label = ttk.Label(root, text="Anime Recommender", font=("Helvetica", 32))
+    initial_label.pack(pady=5)
 
     # Seasonal Anime
     seasonal_root = tk.Frame(root, highlightbackground="black", highlightthickness=1)
     seasonal_root.pack(pady=5, expand=True, side="left")   
+
+    seasonal_label = ttk.Label(seasonal_root, text="Seasonal Anime", font=("Helvetica", 16))
+    seasonal_label.pack(pady=10)
 
     year_frame = ttk.Frame(seasonal_root)
     year_frame.pack(pady=5)
@@ -120,6 +122,9 @@ def gui():
     current_season_root = tk.Frame(root, highlightbackground="black", highlightthickness=1)
     current_season_root.pack(pady=5, expand=True, side="left")
 
+    current_season_label = ttk.Label(current_season_root, text="Current Season Anime", font=("Helvetica", 16))
+    current_season_label.pack(pady=10)
+
     current_season_button = ttk.Button(current_season_root, text="Search Current Season", command=lambda: show_current_season_anime(current_season_frame))
     current_season_button.pack(pady=5)
 
@@ -137,6 +142,9 @@ def gui():
     # Upcoming Anime
     upcoming_root = tk.Frame(root, highlightbackground="black", highlightthickness=1)
     upcoming_root.pack(pady=5, expand=True, side="left") 
+
+    upcoming_label = ttk.Label(upcoming_root, text="Upcoming Anime", font=("Helvetica", 16))
+    upcoming_label.pack(pady=10)
 
     search_upcoming_button = ttk.Button(upcoming_root, text="Search Upcoming Anime", command=lambda: show_upcoming_anime(upcoming_frame))
     search_upcoming_button.pack(pady=5)
