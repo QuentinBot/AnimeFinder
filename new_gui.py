@@ -13,6 +13,8 @@ def change_anime_status(label, direction):
     index = BACKGROUND_COLORS.index(color)
     new_index = (index + direction) % len(BACKGROUND_COLORS)
     label.config(background=BACKGROUND_COLORS[new_index])
+    for widget in label.winfo_children():
+        widget.config(background=BACKGROUND_COLORS[new_index])
 
 
 def refresh_frame_data(frame, retrieved_data, saved_data, user_threshold=0):
@@ -78,6 +80,8 @@ def show_initial_anime_data_new(path, frame):
 
     for anime_id, data in stored_data.items():
         new_frame = tk.Frame(frame)
+        new_frame.bind("<Button-1>", lambda event, label=new_frame: change_anime_status(label, 1))
+        new_frame.bind("<Button-3>", lambda event, label=new_frame: change_anime_status(label, -1))
         new_frame.pack(fill="x")
 
         new_frame.configure(background=BACKGROUND_COLORS[data["status"]])
@@ -87,11 +91,55 @@ def show_initial_anime_data_new(path, frame):
         new_frame.columnconfigure(2, weight=0)
 
         title_label = ttk.Label(new_frame, text=data["title"], background=BACKGROUND_COLORS[data["status"]])
+        title_label.bind("<Button-1>", lambda event, label=title_label: change_anime_status(label.master, 1))
+        title_label.bind("<Button-3>", lambda event, label=title_label: change_anime_status(label.master, -1))
         title_label.grid(row=0, column=0, sticky="w", padx=5)
         id_label = ttk.Label(new_frame, text=anime_id, background=BACKGROUND_COLORS[data["status"]], anchor="center", width=6)
-        id_label.grid(row=0, column=1, sticky="ns")
+        id_label.bind("<Button-1>", lambda event, label=id_label: change_anime_status(label.master, 1))
+        id_label.bind("<Button-3>", lambda event, label=id_label: change_anime_status(label.master, -1))
+        id_label.grid(row=0, column=1)
         num_list_users_label = ttk.Label(new_frame, text=data["num_list_users"], background=BACKGROUND_COLORS[data["status"]], anchor="center", width=7)
-        num_list_users_label.grid(row=0, column=2, padx=(0, 15), sticky="ns")
+        num_list_users_label.bind("<Button-1>", lambda event, label=num_list_users_label: change_anime_status(label.master, 1))
+        num_list_users_label.bind("<Button-3>", lambda event, label=num_list_users_label: change_anime_status(label.master, -1))
+        num_list_users_label.grid(row=0, column=2, padx=(0, 15))
+
+
+def show_upcoming_anime_new(frame):
+    retrieved_upcoming_anime_data = mal_access.get_upcoming_anime()
+    saved_upcoming_data = util.load_save_data("upcoming")
+
+    for widget in frame.winfo_children():
+        widget.destroy()
+
+    for anime in retrieved_upcoming_anime_data["data"]:
+        anime_id = str(anime['node']['id'])
+
+        if anime_id not in saved_upcoming_data:
+            saved_upcoming_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0}
+
+        new_frame = tk.Frame(frame)
+        new_frame.bind("<Button-1>", lambda event, label=new_frame: change_anime_status(label, 1))
+        new_frame.bind("<Button-3>", lambda event, label=new_frame: change_anime_status(label, -1))
+        new_frame.pack(fill="x")
+
+        new_frame.configure(background=BACKGROUND_COLORS[saved_upcoming_data[anime_id]["status"]])
+
+        new_frame.columnconfigure(0, weight=1)
+        new_frame.columnconfigure(1, weight=0)
+        new_frame.columnconfigure(2, weight=0)
+
+        title_label = ttk.Label(new_frame, text=saved_upcoming_data[anime_id]["title"], background=BACKGROUND_COLORS[saved_upcoming_data[anime_id]["status"]])
+        title_label.bind("<Button-1>", lambda event, label=title_label: change_anime_status(label.master, 1))
+        title_label.bind("<Button-3>", lambda event, label=title_label: change_anime_status(label.master, -1))
+        title_label.grid(row=0, column=0, sticky="w", padx=5)
+        id_label = ttk.Label(new_frame, text=anime_id, background=BACKGROUND_COLORS[saved_upcoming_data[anime_id]["status"]], anchor="center", width=6)
+        id_label.bind("<Button-1>", lambda event, label=id_label: change_anime_status(label.master, 1))
+        id_label.bind("<Button-3>", lambda event, label=id_label: change_anime_status(label.master, -1))
+        id_label.grid(row=0, column=1)
+        num_list_users_label = ttk.Label(new_frame, text=saved_upcoming_data[anime_id]["num_list_users"], background=BACKGROUND_COLORS[saved_upcoming_data[anime_id]["status"]], anchor="center", width=7)
+        num_list_users_label.bind("<Button-1>", lambda event, label=num_list_users_label: change_anime_status(label.master, 1))
+        num_list_users_label.bind("<Button-3>", lambda event, label=num_list_users_label: change_anime_status(label.master, -1))
+        num_list_users_label.grid(row=0, column=2, padx=(0, 15))
 
 
 def initialise_scrollbar_header(frame):
@@ -191,7 +239,7 @@ def gui():
     upcoming_label = ttk.Label(upcoming_root, text="Upcoming Anime", font=("Helvetica", 16))
     upcoming_label.pack(pady=10)
 
-    search_upcoming_button = ttk.Button(upcoming_root, text="Search Upcoming Anime", command=lambda: show_upcoming_anime(upcoming_frame))
+    search_upcoming_button = ttk.Button(upcoming_root, text="Search Upcoming Anime", command=lambda: show_upcoming_anime_new(upcoming_frame))
     search_upcoming_button.pack(pady=5)
 
     upcoming_border_frame = tk.Frame(upcoming_root, highlightbackground="black", highlightthickness=1, width=400, height=300)
