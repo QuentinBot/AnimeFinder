@@ -10,6 +10,9 @@ CURRENT_SEASON_THRESHOLD = 100000
 
 
 def filter_sequels(anime_list):
+    if not anime_list or "data" not in anime_list:
+        return []
+    
     sequels = []
     for anime in anime_list["data"]:
         if anime["node"]["num_list_users"] < MIN_USERS_THRESHOLD:
