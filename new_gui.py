@@ -73,7 +73,7 @@ def show_initial_anime_data(path, frame):
 # TODO: Make prettier
 def gui():
 
-    root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 700))
+    root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 700), resizable=(False, False))
     root.position_center()
  
     year_valid_function = root.register(util.validate_year)
