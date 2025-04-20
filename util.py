@@ -60,3 +60,18 @@ def load_save_data(path):
             return json.load(file)
     except FileNotFoundError:
         return {}
+    
+
+def save_changes_new(path, frame):
+    print("Saving changes...")
+    save_data = {}
+    for row_frame in frame.winfo_children():
+        anime_id = row_frame.winfo_children()[1].cget("text")
+        title = row_frame.winfo_children()[0].cget("text")
+        num_list_users = row_frame.winfo_children()[2].cget("text")
+        status = BACKGROUND_COLORS.index(str(row_frame.cget("background")))
+        save_data[anime_id] = {"title": title, "num_list_users": num_list_users, "status": status}
+    
+    with open(f"{SAVE_PATH}{path}.json", "w") as file:
+        json.dump(save_data, file, indent=4)        
+            
