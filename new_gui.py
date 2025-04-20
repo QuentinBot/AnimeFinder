@@ -30,29 +30,7 @@ def refresh_frame_data(frame, retrieved_data, saved_data, user_threshold=0):
         if anime_id not in saved_data:
             saved_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0}
 
-        new_frame = tk.Frame(frame)
-        new_frame.bind("<Button-1>", lambda event, label=new_frame: change_anime_status(label, 1))
-        new_frame.bind("<Button-3>", lambda event, label=new_frame: change_anime_status(label, -1))
-        new_frame.pack(fill="x")
-
-        new_frame.configure(background=BACKGROUND_COLORS[saved_data[anime_id]["status"]])
-
-        new_frame.columnconfigure(0, weight=1)
-        new_frame.columnconfigure(1, weight=0)
-        new_frame.columnconfigure(2, weight=0)
-
-        title_label = ttk.Label(new_frame, text=saved_data[anime_id]["title"], background=BACKGROUND_COLORS[saved_data[anime_id]["status"]])
-        title_label.bind("<Button-1>", lambda event, label=title_label: change_anime_status(label.master, 1))
-        title_label.bind("<Button-3>", lambda event, label=title_label: change_anime_status(label.master, -1))
-        title_label.grid(row=0, column=0, sticky="w", padx=5)
-        id_label = ttk.Label(new_frame, text=anime_id, background=BACKGROUND_COLORS[saved_data[anime_id]["status"]], anchor="center", width=6)
-        id_label.bind("<Button-1>", lambda event, label=id_label: change_anime_status(label.master, 1))
-        id_label.bind("<Button-3>", lambda event, label=id_label: change_anime_status(label.master, -1))
-        id_label.grid(row=0, column=1)
-        num_list_users_label = ttk.Label(new_frame, text=saved_data[anime_id]["num_list_users"], background=BACKGROUND_COLORS[saved_data[anime_id]["status"]], anchor="center", width=7)
-        num_list_users_label.bind("<Button-1>", lambda event, label=num_list_users_label: change_anime_status(label.master, 1))
-        num_list_users_label.bind("<Button-3>", lambda event, label=num_list_users_label: change_anime_status(label.master, -1))
-        num_list_users_label.grid(row=0, column=2, padx=(0, 15))
+        generate_row_frame_contents(frame, anime_id, saved_data[anime_id])
 
 
 def show_seasonal_anime(year, season, frame):
@@ -85,29 +63,7 @@ def show_initial_anime_data(path, frame):
     
 
     for anime_id, data in stored_data.items():
-        new_frame = tk.Frame(frame)
-        new_frame.bind("<Button-1>", lambda event, label=new_frame: change_anime_status(label, 1))
-        new_frame.bind("<Button-3>", lambda event, label=new_frame: change_anime_status(label, -1))
-        new_frame.pack(fill="x")
-
-        new_frame.configure(background=BACKGROUND_COLORS[data["status"]])
-
-        new_frame.columnconfigure(0, weight=1)
-        new_frame.columnconfigure(1, weight=0)
-        new_frame.columnconfigure(2, weight=0)
-
-        title_label = ttk.Label(new_frame, text=data["title"], background=BACKGROUND_COLORS[data["status"]])
-        title_label.bind("<Button-1>", lambda event, label=title_label: change_anime_status(label.master, 1))
-        title_label.bind("<Button-3>", lambda event, label=title_label: change_anime_status(label.master, -1))
-        title_label.grid(row=0, column=0, sticky="w", padx=5)
-        id_label = ttk.Label(new_frame, text=anime_id, background=BACKGROUND_COLORS[data["status"]], anchor="center", width=6)
-        id_label.bind("<Button-1>", lambda event, label=id_label: change_anime_status(label.master, 1))
-        id_label.bind("<Button-3>", lambda event, label=id_label: change_anime_status(label.master, -1))
-        id_label.grid(row=0, column=1)
-        num_list_users_label = ttk.Label(new_frame, text=data["num_list_users"], background=BACKGROUND_COLORS[data["status"]], anchor="center", width=7)
-        num_list_users_label.bind("<Button-1>", lambda event, label=num_list_users_label: change_anime_status(label.master, 1))
-        num_list_users_label.bind("<Button-3>", lambda event, label=num_list_users_label: change_anime_status(label.master, -1))
-        num_list_users_label.grid(row=0, column=2, padx=(0, 15))
+        generate_row_frame_contents(frame, anime_id, data)
 
 
 def initialise_scrollbar_header(frame):
@@ -128,7 +84,33 @@ def initialise_scrollbar_header(frame):
     horizontal_separator.pack(fill="x")
 
 
-# TODO: Change logic to use three labels per anime instead of one label with multiple lines
+def generate_row_frame_contents(frame, anime_id, data):
+    new_frame = tk.Frame(frame)
+    new_frame.bind("<Button-1>", lambda event, label=new_frame: change_anime_status(label, 1))
+    new_frame.bind("<Button-3>", lambda event, label=new_frame: change_anime_status(label, -1))
+    new_frame.pack(fill="x")
+
+    new_frame.configure(background=BACKGROUND_COLORS[data["status"]])
+
+    new_frame.columnconfigure(0, weight=1)
+    new_frame.columnconfigure(1, weight=0)
+    new_frame.columnconfigure(2, weight=0)
+
+    title_label = ttk.Label(new_frame, text=data["title"], background=BACKGROUND_COLORS[data["status"]])
+    title_label.bind("<Button-1>", lambda event, label=title_label: change_anime_status(label.master, 1))
+    title_label.bind("<Button-3>", lambda event, label=title_label: change_anime_status(label.master, -1))
+    title_label.grid(row=0, column=0, sticky="w", padx=5)
+    id_label = ttk.Label(new_frame, text=anime_id, background=BACKGROUND_COLORS[data["status"]], anchor="center", width=6)
+    id_label.bind("<Button-1>", lambda event, label=id_label: change_anime_status(label.master, 1))
+    id_label.bind("<Button-3>", lambda event, label=id_label: change_anime_status(label.master, -1))
+    id_label.grid(row=0, column=1)
+    num_list_users_label = ttk.Label(new_frame, text=data["num_list_users"], background=BACKGROUND_COLORS[data["status"]], anchor="center", width=7)
+    num_list_users_label.bind("<Button-1>", lambda event, label=num_list_users_label: change_anime_status(label.master, 1))
+    num_list_users_label.bind("<Button-3>", lambda event, label=num_list_users_label: change_anime_status(label.master, -1))
+    num_list_users_label.grid(row=0, column=2, padx=(0, 15))
+
+
+# TODO: Include media type in row frame
 # TODO: Make prettier
 def gui():
 
