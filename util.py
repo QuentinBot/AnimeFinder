@@ -3,7 +3,7 @@ import datetime
 import json
 
 SEASONS = ["Winter", "Spring", "Summer", "Fall"]
-BACKGROUND_COLORS = ["white", "#ccffcc", "#ffcccc"]
+BACKGROUND_COLORS = ["#c4f5fc", "white", "#ccffcc", "#ffcccc"]
 SAVE_PATH = "./data/"
 MIN_USERS_THRESHOLD = 10000
 CURRENT_SEASON_THRESHOLD = 100000
