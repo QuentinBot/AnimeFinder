@@ -13,9 +13,8 @@ Are you overwhelmed by the sheer number of anime released every season? Do you s
 _"If it's getting a sequel, it's probably good!"_
 
 - Discover all sequel/prequel/related anime for any season
-- Search for general upcoming sequel anime.
-
-This feature helps you catch up on shows before their new seasons air, so you can watch them live!
+- Find upcoming sequels to catch up before new seasons air
+- Never miss a franchise entry again
 
 ### 🔥 Popularity-Based Recommendations
 
@@ -23,6 +22,18 @@ _"100,000 MAL users can't be wrong!"_
 
 - Get recommendations filtered by popularity threshold (default: 100k+ users)
 - See what's trending in the current season
+
+### 🎨 Interactive Watch Status
+
+_"Visual tracking at a glance"_
+
+- Click any anime label to cycle through statuses with **color feedback**:
+  - 🟢 **Green** - ✅ Caught Up
+  - ⚪ **White** - 👀 Currently Watching
+  - 🔴 **Red** - ❌ Not Watching
+  - 🔵 **Blue** - 🆕 New Entry (default)
+- Visual color-coding for quick scanning
+- Save your preferences between sessions
 
 ---
 
@@ -32,7 +43,7 @@ _"100,000 MAL users can't be wrong!"_
 
 ---
 
-## Installation
+## ⚙️ Installation
 
 1. Clone the repository
 
@@ -43,8 +54,8 @@ _"100,000 MAL users can't be wrong!"_
 
 2. Install dependencies
 
-```bash
-    pip install -r requirements.txtr
+```
+    pip install -r requirements.txt
 ```
 
 3. Configure MAL API
