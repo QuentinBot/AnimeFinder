@@ -54,16 +54,19 @@ _"Visual tracking at a glance"_
 
 2. Install dependencies
 
-```
+```bash
     pip install -r requirements.txt
 ```
 
 3. Configure MAL API
+
    - Get your MyAnimeList API key [here](https://myanimelist.net/apiconfig)
    - Add it to `config.py`
-   ```bash
+
+   ```python
        MAL_KEY = "your_api_key_here"
    ```
+
 4. Launch!
 
 ```bash
