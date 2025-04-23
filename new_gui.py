@@ -5,7 +5,7 @@ import datetime
 
 import mal_access
 import util
-from util import SEASONS, BACKGROUND_COLORS, CURRENT_SEASON_THRESHOLD
+from util import SEASONS, BACKGROUND_COLORS, CURRENT_SEASON_THRESHOLD, MEDIA_TYPE_TO_COLOR
 
 
 def change_anime_status(label, direction):
@@ -28,7 +28,7 @@ def refresh_frame_data(frame, retrieved_data, saved_data, user_threshold=0):
             break
 
         if anime_id not in saved_data:
-            saved_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0}
+            saved_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0, "media_type": anime["node"]["media_type"]}
 
         generate_row_frame_contents(frame, anime_id, saved_data[anime_id])
 
@@ -96,7 +96,7 @@ def generate_row_frame_contents(frame, anime_id, data):
     new_frame.columnconfigure(1, weight=0)
     new_frame.columnconfigure(2, weight=0)
 
-    title_label = ttk.Label(new_frame, text=data["title"], background=BACKGROUND_COLORS[data["status"]])
+    title_label = ttk.Label(new_frame, text=data["title"], background=BACKGROUND_COLORS[data["status"]], foreground=MEDIA_TYPE_TO_COLOR[data["media_type"]], anchor="w")
     title_label.bind("<Button-1>", lambda event, label=title_label: change_anime_status(label.master, 1))
     title_label.bind("<Button-3>", lambda event, label=title_label: change_anime_status(label.master, -1))
     title_label.grid(row=0, column=0, sticky="w", padx=5)
@@ -110,7 +110,7 @@ def generate_row_frame_contents(frame, anime_id, data):
     num_list_users_label.grid(row=0, column=2, padx=(0, 15))
 
 
-# TODO: Include media type in row frame
+# TODO: Only include upcoming sequels
 # TODO: Make prettier
 def gui():
 

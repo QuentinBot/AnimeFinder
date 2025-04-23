@@ -4,6 +4,17 @@ import json
 
 SEASONS = ["Winter", "Spring", "Summer", "Fall"]
 BACKGROUND_COLORS = ["#c4f5fc", "white", "#ccffcc", "#ffcccc"]
+MEDIA_TYPE_TO_COLOR = {
+    "movie": "#01579B",
+    "tv": "black",
+    "ova": "olive",
+    "ona": "green",
+    "special": "brown",
+    "music": "gray",
+    "unknown": "gray",
+    "tv_special": "red"
+}
+COLOR_TO_MEDIA_TYPE = {color: media for media, color in MEDIA_TYPE_TO_COLOR.items()}
 SAVE_PATH = "./data/"
 MIN_USERS_THRESHOLD = 10000
 CURRENT_SEASON_THRESHOLD = 100000
@@ -57,10 +68,11 @@ def save_changes(path, frame):
     save_data = {}
     for row_frame in frame.winfo_children():
         title = row_frame.winfo_children()[0].cget("text")
+        media_type = COLOR_TO_MEDIA_TYPE[str(row_frame.winfo_children()[0].cget("foreground"))]
         anime_id = row_frame.winfo_children()[1].cget("text")
         num_list_users = row_frame.winfo_children()[2].cget("text")
         status = BACKGROUND_COLORS.index(str(row_frame.cget("background")))
-        save_data[anime_id] = {"title": title, "num_list_users": num_list_users, "status": status}
+        save_data[anime_id] = {"title": title, "num_list_users": num_list_users, "status": status, "media_type": media_type}
     
     with open(f"{SAVE_PATH}{path}.json", "w") as file:
         json.dump(save_data, file, indent=4)        
