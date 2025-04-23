@@ -123,7 +123,7 @@ def insert_background_image(window, image_path, width, height, x, y, scale):
 # TODO: Update Readme
 def gui():
 
-    root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 700), resizable=(False, False))
+    root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 700), resizable=(False, False), iconphoto="assets/icon.png")
     root.position_center()
 
     insert_background_image(root, "assets/naruto.png", 920, 832, 50, 10, 0.15)
