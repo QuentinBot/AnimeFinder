@@ -120,6 +120,8 @@ def insert_background_image(window, image_path, width, height, x, y, scale):
     background_label.image = background_image  # Keep a reference to avoid garbage collection
 
 
+# TODO: add config file with empty API key
+# TODO: add requirements file
 # TODO: Update Readme
 def gui():
 
