@@ -5,14 +5,14 @@ import json
 SEASONS = ["Winter", "Spring", "Summer", "Fall"]
 BACKGROUND_COLORS = ["#c4f5fc", "white", "#ccffcc", "#ffcccc"]
 MEDIA_TYPE_TO_COLOR = {
-    "movie": "#01579B",
     "tv": "black",
+    "movie": "#01579B",
     "ova": "olive",
     "ona": "green",
     "special": "brown",
-    "music": "gray",
+    "music": "purple",
     "unknown": "gray",
-    "tv_special": "red"
+    "tv_special": "orange"
 }
 COLOR_TO_MEDIA_TYPE = {color: media for media, color in MEDIA_TYPE_TO_COLOR.items()}
 SAVE_PATH = "./data/"

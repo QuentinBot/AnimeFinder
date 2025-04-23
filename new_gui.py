@@ -122,6 +122,17 @@ def gui():
     initial_label = ttk.Label(root, text="Anime Recommender", font=("Helvetica", 32))
     initial_label.pack(pady=5)
 
+    canvas = tk.Canvas(root, width=335, height=50, highlightthickness=0)
+    canvas.pack(pady=2, side="top")
+    canvas.create_rectangle(5, 5, 330, 45, outline="black", dash=(3, 5))
+    legend_frame = tk.Frame(canvas)
+    legend_frame.place(relx=0.5, rely=0.5, anchor="center")
+    legend_label = ttk.Label(legend_frame, text="Legend", font=("Helvetica", 10, "bold"))
+    legend_label.pack()
+    for media_type, color in MEDIA_TYPE_TO_COLOR.items():
+        media_type_label = ttk.Label(legend_frame, text=media_type.upper(), foreground=color, anchor="w", font=("Helvetica", 8))
+        media_type_label.pack(side="left", fill="x", expand=True)
+
     # Seasonal Anime
     seasonal_root = tk.Frame(root, highlightbackground="black", highlightthickness=1)
     seasonal_root.pack(pady=5, expand=True, side="left")   
