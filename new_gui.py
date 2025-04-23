@@ -111,7 +111,15 @@ def generate_row_frame_contents(frame, anime_id, data):
     num_list_users_label.grid(row=0, column=2, padx=(0, 15))
 
 
-# TODO: Make prettier
+def insert_background_image(window, image_path, width, height, x, y, scale):
+    original_image = Image.open(image_path)
+    resized_image = original_image.resize((int(width * scale), int(height * scale)))
+    background_image = ImageTk.PhotoImage(resized_image)
+    background_label = tk.Label(window, image=background_image)
+    background_label.place(x=x, y=y, anchor="nw")
+    background_label.image = background_image  # Keep a reference to avoid garbage collection
+
+
 # TODO: Reorganise files
 # TODO: Update Readme
 def gui():
@@ -119,29 +127,10 @@ def gui():
     root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 700), resizable=(False, False))
     root.position_center()
 
-    original_image1 = Image.open("assets/naruto.png")
-    resized_image1 = original_image1.resize((int(920*0.15), int(832*0.15)))
-    background_image1 = ImageTk.PhotoImage(resized_image1)
-    background_label1 = tk.Label(root, image=background_image1)
-    background_label1.place(x=50, y=10, anchor="nw")
-
-    original_image2 = Image.open("assets/rengoku.png")
-    resized_image2 = original_image2.resize((int(646*0.22), int(690*0.22)))
-    background_image2 = ImageTk.PhotoImage(resized_image2)
-    background_label2 = tk.Label(root, image=background_image2)
-    background_label2.place(x=1175, y=20, anchor="nw")
-
-    original_image3 = Image.open("assets/frieren.png")
-    resized_image3 = original_image3.resize((int(595*0.2), int(630*0.2)))
-    background_image3 = ImageTk.PhotoImage(resized_image3)
-    background_label3 = tk.Label(root, image=background_image3)
-    background_label3.place(x=300, y=5, anchor="nw")
-
-    original_image4 = Image.open("assets/itadori.png")
-    resized_image4 = original_image4.resize((int(543*0.2), int(775*0.2)))
-    background_image4 = ImageTk.PhotoImage(resized_image4)
-    background_label4 = tk.Label(root, image=background_image4)
-    background_label4.place(x=1000, y=10, anchor="nw")
+    insert_background_image(root, "assets/naruto.png", 920, 832, 50, 10, 0.15)
+    insert_background_image(root, "assets/rengoku.png", 646, 690, 1175, 20, 0.22)
+    insert_background_image(root, "assets/frieren.png", 595, 630, 300, 5, 0.2)
+    insert_background_image(root, "assets/itadori.png", 543, 775, 1000, 10, 0.2)
  
     year_valid_function = root.register(util.validate_year)
 
