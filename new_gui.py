@@ -2,6 +2,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.scrolled import ScrolledFrame
 import tkinter as tk
 import datetime
+from PIL import Image, ImageTk
 
 import mal_access
 import util
@@ -62,7 +63,6 @@ def show_initial_anime_data(path, frame):
     for widget in frame.winfo_children():
         widget.destroy()
     
-
     for anime_id, data in stored_data.items():
         generate_row_frame_contents(frame, anime_id, data)
 
@@ -118,6 +118,30 @@ def gui():
 
     root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 700), resizable=(False, False))
     root.position_center()
+
+    original_image1 = Image.open("data/naruto.png")
+    resized_image1 = original_image1.resize((int(920*0.15), int(832*0.15)))
+    background_image1 = ImageTk.PhotoImage(resized_image1)
+    background_label1 = tk.Label(root, image=background_image1)
+    background_label1.place(x=50, y=10, anchor="nw")
+
+    original_image2 = Image.open("data/rengoku.png")
+    resized_image2 = original_image2.resize((int(646*0.22), int(690*0.22)))
+    background_image2 = ImageTk.PhotoImage(resized_image2)
+    background_label2 = tk.Label(root, image=background_image2)
+    background_label2.place(x=1175, y=20, anchor="nw")
+
+    original_image3 = Image.open("data/frieren.png")
+    resized_image3 = original_image3.resize((int(595*0.2), int(630*0.2)))
+    background_image3 = ImageTk.PhotoImage(resized_image3)
+    background_label3 = tk.Label(root, image=background_image3)
+    background_label3.place(x=300, y=5, anchor="nw")
+
+    original_image4 = Image.open("data/itadori.png")
+    resized_image4 = original_image4.resize((int(543*0.2), int(775*0.2)))
+    background_image4 = ImageTk.PhotoImage(resized_image4)
+    background_label4 = tk.Label(root, image=background_image4)
+    background_label4.place(x=1000, y=10, anchor="nw")
  
     year_valid_function = root.register(util.validate_year)
 
