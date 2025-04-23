@@ -43,9 +43,10 @@ def show_seasonal_anime(year, season, frame):
 
 def show_upcoming_anime(frame):
     retrieved_upcoming_anime_data = mal_access.get_upcoming_anime()
+    filtered_upcoming_anime_data = util.filter_sequels(retrieved_upcoming_anime_data)
     saved_upcoming_data = util.load_save_data("upcoming")
 
-    refresh_frame_data(frame, retrieved_upcoming_anime_data["data"], saved_upcoming_data)
+    refresh_frame_data(frame, filtered_upcoming_anime_data, saved_upcoming_data)
 
 
 def show_current_season_anime(frame):
@@ -110,8 +111,9 @@ def generate_row_frame_contents(frame, anime_id, data):
     num_list_users_label.grid(row=0, column=2, padx=(0, 15))
 
 
-# TODO: Only include upcoming sequels
 # TODO: Make prettier
+# TODO: Reorganise files
+# TODO: Update Readme
 def gui():
 
     root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 700), resizable=(False, False))
