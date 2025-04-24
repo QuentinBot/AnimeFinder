@@ -121,8 +121,6 @@ def insert_background_image(window, image_path, width, height, x, y, scale):
 
 
 # TODO: add config file with empty API key
-# TODO: add requirements file
-# TODO: Update Readme
 def gui():
 
     root = ttk.Window(title="Anime Recommender", themename="flatly", size=(1400, 700), resizable=(False, False), iconphoto="assets/icon.png")

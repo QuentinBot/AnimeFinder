@@ -3,6 +3,7 @@ legacy/Savestates/seq*
 legacy/Savestates_Script/[!.]*
 data/*
 catch_up_list.txt
+animefinder
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
