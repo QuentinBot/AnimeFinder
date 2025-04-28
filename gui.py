@@ -30,6 +30,8 @@ def refresh_frame_data(frame, retrieved_data, saved_data, user_threshold=0):
 
         if anime_id not in saved_data:
             saved_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0, "media_type": anime["node"]["media_type"]}
+        else:
+            saved_data[anime_id].update({"num_list_users": anime["node"]["num_list_users"], "media_type": anime["node"]["media_type"]})
 
         generate_row_frame_contents(frame, anime_id, saved_data[anime_id])
 
@@ -180,7 +182,7 @@ def gui():
     sequels_frame.pack()
 
     save_seasonal_button = ttk.Button(seasonal_root, text="Save Changes", command=lambda: util.save_changes(f"{year_entry.get()}_{season_var.get().lower()}", sequels_frame))
-    save_seasonal_button.pack(pady=5)
+    save_seasonal_button.pack(pady=(5, 10))
 
     show_initial_anime_data(f"{year_entry.get()}_{season_var.get().lower()}", sequels_frame)
 
@@ -203,7 +205,7 @@ def gui():
     current_season_frame.pack()
 
     save_current_season_button = ttk.Button(current_season_root, text="Save Changes", command=lambda: util.save_changes("current_season", current_season_frame))
-    save_current_season_button.pack(pady=5)
+    save_current_season_button.pack(pady=(5, 10))
 
     show_initial_anime_data("current_season", current_season_frame)
 
@@ -227,7 +229,7 @@ def gui():
     upcoming_frame.pack()
 
     save_upcoming_button = ttk.Button(upcoming_root, text="Save Changes", command=lambda: util.save_changes("upcoming", upcoming_frame))
-    save_upcoming_button.pack(pady=5)
+    save_upcoming_button.pack(pady=(5, 10))
 
     show_initial_anime_data("upcoming", upcoming_frame)
 
