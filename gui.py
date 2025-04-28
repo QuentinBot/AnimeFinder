@@ -30,6 +30,8 @@ def refresh_frame_data(frame, retrieved_data, saved_data, user_threshold=0):
 
         if anime_id not in saved_data:
             saved_data[anime_id] = {"title": anime["node"]["title"], "num_list_users": anime["node"]["num_list_users"], "status": 0, "media_type": anime["node"]["media_type"]}
+        else:
+            saved_data[anime_id].update({"num_list_users": anime["node"]["num_list_users"], "media_type": anime["node"]["media_type"]})
 
         generate_row_frame_contents(frame, anime_id, saved_data[anime_id])
 
