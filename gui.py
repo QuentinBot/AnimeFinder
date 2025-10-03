@@ -160,7 +160,7 @@ def gui():
     year_label = ttk.Label(year_frame, text="Enter Year:")
     year_label.pack(side="left", expand=True, padx=5)
     year_entry = ttk.Spinbox(year_frame, from_=1916, to=datetime.datetime.now().year + 3, increment=1, width=5, validate="focus", validatecommand=(year_valid_function, "%P"), wrap=True, command=lambda: show_initial_anime_data(f"{year_entry.get()}_{season_var.get().lower()}", sequels_frame))
-    year_entry.set(datetime.datetime.now().year)
+    year_entry.set(util.get_year_for_next_season())
     year_entry.pack(side="left", expand=True, padx=5)
 
     season_frame = ttk.Frame(seasonal_root)
