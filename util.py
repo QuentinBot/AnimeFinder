@@ -54,6 +54,13 @@ def get_next_season():
     next_season_index = (current_season_index + 1) % len(SEASONS)
     return SEASONS[next_season_index]
 
+def get_year_for_next_season():
+    next_season = get_next_season()
+    if next_season == SEASONS[0]:
+        return datetime.datetime.now().year + 1
+    else:
+        return datetime.datetime.now().year
+
 
 def load_save_data(path):
     try:
